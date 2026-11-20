@@ -129,7 +129,41 @@
 
   <!-- Main Content Grid -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
-    <div id="bird-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+    <!-- Top Pagination Bar -->
+    <div id="pagination-top" class="hidden mb-4 flex items-center justify-between gap-3 px-3.5 py-2 rounded-xl bg-[#16221c] border border-[#2b4035] text-xs">
+      <div class="text-[#9cb3a7]">
+        Showing <span id="page-range-top" class="font-semibold text-white">0–0</span> of <span id="page-total-top" class="font-semibold text-white">0</span> birds (A–Z)
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" data-page-action="prev" aria-label="Previous page" class="p-1.5 rounded-lg bg-[#0f1713] hover:bg-[#1e2e26] disabled:opacity-35 disabled:pointer-events-none border border-[#2b4035] text-slate-200 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <span id="page-indicator-top" class="font-mono-tech text-[11px] text-emerald-300 px-1.5">Page 1 of 1</span>
+        <button type="button" data-page-action="next" aria-label="Next page" class="p-1.5 rounded-lg bg-[#0f1713] hover:bg-[#1e2e26] disabled:opacity-35 disabled:pointer-events-none border border-[#2b4035] text-slate-200 transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div id="bird-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3"></div>
+
+    <!-- Bottom Pagination Bar -->
+    <div id="pagination-bottom" class="hidden mt-5 flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl bg-[#16221c] border border-[#2b4035] text-xs">
+      <div class="text-[#9cb3a7]">
+        Showing <span id="page-range-bottom" class="font-semibold text-white">0–0</span> of <span id="page-total-bottom" class="font-semibold text-white">0</span> birds
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" data-page-action="prev" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#0f1713] hover:bg-[#1e2e26] disabled:opacity-35 disabled:pointer-events-none border border-[#2b4035] text-slate-200 font-medium transition">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+          <span>Prev</span>
+        </button>
+        <span id="page-indicator-bottom" class="font-mono-tech text-[11px] text-emerald-300 px-2">Page 1 of 1</span>
+        <button type="button" data-page-action="next" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#0f1713] hover:bg-[#1e2e26] disabled:opacity-35 disabled:pointer-events-none border border-[#2b4035] text-slate-200 font-medium transition">
+          <span>Next</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/></svg>
+        </button>
+      </div>
+    </div>
 
     <!-- Empty State -->
     <div id="empty-state" class="hidden py-16 text-center">
@@ -445,13 +479,15 @@
     let currentView = "all"; // "all" | "photographed" | "needed"
     let currentGroup = "ALL";
     let searchQuery = "";
+    let currentPage = 1;
+    let totalPages = 1;
+    const MAX_ROWS_PER_PAGE = 5;
 
     // Modal working state
     let activeBirdId = null;
     let pendingPhotoDataUrl = null;
     let pendingPhotoCleared = false;
     let deleteArmed = false;
-    let armedCardDeleteId = null;
 
     // =========================================================================
     // 3. INDEXEDDB HELPERS (HIGH-RES LOCAL PHOTO PERSISTENCE)
@@ -549,7 +585,18 @@
     // 4. HELPERS & RENDERING
     // =========================================================================
     function getAllSpecies() {
-      return [...BASELINE_BIRDS, ...customSpecies];
+      return [...BASELINE_BIRDS, ...customSpecies].sort((a, b) =>
+        a.common.localeCompare(b.common, undefined, { sensitivity: "base" })
+      );
+    }
+
+    function getGridColumnsCount() {
+      const w = window.innerWidth;
+      if (w >= 1280) return 6; // xl:grid-cols-6
+      if (w >= 1024) return 5; // lg:grid-cols-5
+      if (w >= 768) return 4;  // md:grid-cols-4
+      if (w >= 640) return 3;  // sm:grid-cols-3
+      return 2;                // grid-cols-2
     }
 
     function getBirdImageSrc(birdId) {
@@ -572,7 +619,7 @@
 
     function populateGroupFilter() {
       const select = document.getElementById("group-filter");
-      const groups = [...new Set(getAllSpecies().map((b) => b.group))];
+      const groups = [...new Set(getAllSpecies().map((b) => b.group))].sort();
       select.innerHTML = '<option value="ALL">All Taxonomic Groups</option>';
       groups.forEach((g) => {
         const opt = document.createElement("option");
@@ -620,78 +667,112 @@
 
       const grid = document.getElementById("bird-grid");
       const emptyState = document.getElementById("empty-state");
+      const pagTop = document.getElementById("pagination-top");
+      const pagBottom = document.getElementById("pagination-bottom");
 
       if (filtered.length === 0) {
         grid.innerHTML = "";
         emptyState.classList.remove("hidden");
+        pagTop.classList.add("hidden");
+        pagBottom.classList.add("hidden");
         return;
       }
 
       emptyState.classList.add("hidden");
-      grid.innerHTML = filtered.map((bird) => {
+
+      // Paginate to at most 5 rows based on active responsive column count
+      const cols = getGridColumnsCount();
+      const pageSize = cols * MAX_ROWS_PER_PAGE;
+      totalPages = Math.max(1, Math.ceil(filtered.length / pageSize));
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+
+      const startIdx = (currentPage - 1) * pageSize;
+      const endIdx = Math.min(startIdx + pageSize, filtered.length);
+      const pageItems = filtered.slice(startIdx, endIdx);
+
+      // Update Top & Bottom Pagination Controls
+      pagTop.classList.remove("hidden");
+      pagBottom.classList.remove("hidden");
+      const rangeText = `${startIdx + 1}–${endIdx}`;
+      const indicatorText = `Page ${currentPage} of ${totalPages}`;
+      document.getElementById("page-range-top").textContent = rangeText;
+      document.getElementById("page-total-top").textContent = filtered.length;
+      document.getElementById("page-indicator-top").textContent = indicatorText;
+      document.getElementById("page-range-bottom").textContent = rangeText;
+      document.getElementById("page-total-bottom").textContent = filtered.length;
+      document.getElementById("page-indicator-bottom").textContent = indicatorText;
+
+      document.querySelectorAll('[data-page-action="prev"]').forEach((btn) => {
+        btn.disabled = currentPage <= 1;
+      });
+      document.querySelectorAll('[data-page-action="next"]').forEach((btn) => {
+        btn.disabled = currentPage >= totalPages;
+      });
+
+      grid.innerHTML = pageItems.map((bird) => {
         const imgSrc = getBirdImageSrc(bird.id);
         const note = birdEntries[bird.id]?.note || "";
         const hasPhoto = Boolean(imgSrc);
-        const isDeleteArmed = armedCardDeleteId === bird.id;
 
         return `
-          <article class="group bg-[#16221c] border ${hasPhoto ? "border-emerald-500/35" : "border-[#2b4035]"} rounded-2xl overflow-hidden flex flex-col shadow-sm hover:border-emerald-400/60 transition">
-            <!-- Photo Frame -->
-            <div class="relative aspect-[4/3] bg-[#0f1713] overflow-hidden">
+          <article class="group bg-[#16221c] border ${hasPhoto ? "border-emerald-500/35" : "border-[#2b4035]"} rounded-xl overflow-hidden flex flex-col shadow-sm hover:border-emerald-400/60 transition">
+            <!-- Photo Frame (~25% smaller footprint) -->
+            <div class="relative aspect-[16/10] bg-[#0f1713] overflow-hidden">
               ${
                 hasPhoto
                   ? `<img src="${imgSrc}" alt="${bird.common}" loading="lazy" data-lightbox-id="${bird.id}" class="w-full h-full object-cover cursor-zoom-in group-hover:scale-[1.02] transition duration-300" />`
-                  : `<button type="button" data-edit-id="${bird.id}" class="w-full h-full flex flex-col items-center justify-center text-[#9cb3a7]/60 hover:text-emerald-300 hover:bg-[#1a2921] transition p-4">
-                      <svg class="w-8 h-8 mb-1.5 opacity-70" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                  : `<button type="button" data-edit-id="${bird.id}" class="w-full h-full flex flex-col items-center justify-center text-[#9cb3a7]/60 hover:text-emerald-300 hover:bg-[#1a2921] transition p-2.5">
+                      <svg class="w-6 h-6 mb-1 opacity-70" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 11v6m-3-3h6"/>
                       </svg>
-                      <span class="text-[11px] font-medium">Add Field Photo</span>
+                      <span class="text-[10px] font-medium">Add Photo</span>
                     </button>`
               }
 
               <!-- Top Badges -->
-              <div class="absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none">
-                <span class="px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-sm text-[10px] font-medium text-slate-200 border border-white/10">
+              <div class="absolute top-1.5 left-1.5 right-1.5 flex items-center justify-between gap-1 pointer-events-none">
+                <span class="px-1.5 py-0.5 rounded bg-black/70 backdrop-blur-sm text-[9px] font-medium text-slate-200 border border-white/10 truncate max-w-[68%]">
                   ${bird.group}
                 </span>
                 ${
                   hasPhoto
-                    ? `<span class="px-2 py-0.5 rounded-md bg-emerald-500/90 text-slate-950 text-[10px] font-bold shadow">Logged</span>`
-                    : `<span class="px-2 py-0.5 rounded-md bg-black/70 text-amber-300/90 text-[10px] font-medium border border-amber-400/20">Needed</span>`
+                    ? `<span class="px-1.5 py-0.5 rounded bg-emerald-500/90 text-slate-950 text-[9px] font-bold shadow shrink-0">Logged</span>`
+                    : `<span class="px-1.5 py-0.5 rounded bg-black/70 text-amber-300/90 text-[9px] font-medium border border-amber-400/20 shrink-0">Needed</span>`
                 }
               </div>
 
-              <!-- Card Action Buttons: Explicit Edit & Delete -->
-              <div class="absolute bottom-2 right-2 flex items-center gap-1.5">
-                <button type="button" data-edit-id="${bird.id}" class="px-2.5 py-1 rounded-lg bg-black/80 hover:bg-emerald-500 text-white hover:text-slate-950 text-[11px] font-semibold border border-white/15 backdrop-blur-sm transition shadow">
-                  ${hasPhoto ? "Edit" : "Upload / Edit"}
-                </button>
+              <!-- Card Action Buttons: Edit & Delete -->
+              <div class="absolute bottom-1.5 right-1.5 flex items-center gap-1">
                 ${
-                  hasPhoto || note
-                    ? `<button type="button" data-card-delete-id="${bird.id}" class="px-2.5 py-1 rounded-lg ${isDeleteArmed ? "bg-rose-600 text-white border-rose-400" : "bg-black/80 hover:bg-rose-600 text-rose-200 hover:text-white border-rose-500/40"} text-[11px] font-semibold border backdrop-blur-sm transition shadow">
-                        ${isDeleteArmed ? "Confirm?" : "Delete"}
+                  hasPhoto
+                    ? `<button type="button" data-card-delete-id="${bird.id}" class="px-1.5 py-0.5 rounded bg-rose-950/90 hover:bg-rose-600 text-rose-200 hover:text-white text-[10px] font-semibold border border-rose-500/40 backdrop-blur-sm transition shadow">
+                        Delete
                       </button>`
                     : ""
                 }
+                <button type="button" data-edit-id="${bird.id}" class="px-2 py-0.5 rounded bg-black/85 hover:bg-emerald-500 text-white hover:text-slate-950 text-[10px] font-semibold border border-white/15 backdrop-blur-sm transition shadow">
+                  ${hasPhoto ? "Edit" : "Upload"}
+                </button>
               </div>
             </div>
 
             <!-- Card Body -->
-            <div class="p-3.5 flex-1 flex flex-col justify-between gap-2.5">
+            <div class="p-2.5 flex-1 flex flex-col justify-between gap-1.5">
               <div>
-                <h3 class="text-sm font-bold text-white leading-snug">${bird.common}</h3>
-                <p class="text-[11px] italic text-[#9cb3a7]">${bird.sci}</p>
+                <h3 class="text-xs font-bold text-white leading-tight truncate" title="${bird.common}">${bird.common}</h3>
+                <p class="text-[10px] italic text-[#9cb3a7] truncate" title="${bird.sci}">${bird.sci}</p>
               </div>
 
               <!-- Inline Note Line (Date Taken / Location) -->
-              <div class="pt-2 border-t border-[#2b4035]/70">
+              <div class="pt-1.5 border-t border-[#2b4035]/70">
                 <input
                   type="text"
                   data-inline-note-id="${bird.id}"
                   value="${note.replace(/"/g, "&quot;")}"
-                  placeholder="Date taken / location note..."
-                  class="w-full px-2.5 py-1.5 rounded-lg bg-[#0f1713] border border-[#2b4035]/80 text-[11px] text-slate-200 placeholder-[#9cb3a7]/50 focus:outline-none focus:border-emerald-400 transition"
+                  placeholder="Date / location..."
+                  class="w-full px-2 py-1 rounded bg-[#0f1713] border border-[#2b4035]/80 text-[10px] text-slate-200 placeholder-[#9cb3a7]/50 focus:outline-none focus:border-emerald-400 transition"
                 />
               </div>
             </div>
@@ -701,7 +782,7 @@
     }
 
     // =========================================================================
-    // 5. ULTRA-COMPACT EDIT / UPLOAD / SPECIES REASSIGN / DELETE MODAL LOGIC
+    // 5. COMPACT UPLOAD / EDIT / REASSIGN SPECIES / DELETE MODAL (<= 50VH)
     // =========================================================================
     function openEditModal(birdId) {
       const bird = getAllSpecies().find((b) => b.id === birdId);
@@ -716,34 +797,25 @@
       const currentImg = getBirdImageSrc(birdId);
 
       document.getElementById("modal-bird-name").textContent = bird.common;
-      document.getElementById("modal-bird-sci").textContent = `${bird.sci} • ${bird.group}`;
+      document.getElementById("modal-bird-sci").textContent = bird.sci;
       document.getElementById("modal-url-input").value = entry.photoUrl && !entry.photoUrl.startsWith("data:") ? entry.photoUrl : "";
       document.getElementById("modal-note-input").value = entry.note || "";
+      document.getElementById("btn-choose-file-label").textContent = currentImg ? "Replace File" : "Choose File";
 
       const deleteBtn = document.getElementById("btn-delete-photo");
       deleteBtn.textContent = "Delete";
       deleteBtn.className = "px-2.5 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-200 text-xs font-semibold transition";
-      deleteBtn.classList.toggle("hidden", !currentImg && !entry.note);
+      deleteBtn.classList.toggle("hidden", !currentImg);
 
-      // Populate Species Selector dropdown with ALL species (pre-selecting current bird)
+      // Populate Species Selector dropdown with ALL species (sorted alphabetically)
       const speciesSelect = document.getElementById("modal-species-select");
       speciesSelect.innerHTML = "";
-      const groups = {};
       getAllSpecies().forEach((b) => {
-        if (!groups[b.group]) groups[b.group] = [];
-        groups[b.group].push(b);
-      });
-      Object.keys(groups).forEach((grp) => {
-        const optgroup = document.createElement("optgroup");
-        optgroup.label = grp;
-        groups[grp].forEach((b) => {
-          const opt = document.createElement("option");
-          opt.value = b.id;
-          opt.textContent = b.common;
-          if (b.id === birdId) opt.selected = true;
-          optgroup.appendChild(opt);
-        });
-        speciesSelect.appendChild(optgroup);
+        const opt = document.createElement("option");
+        opt.value = b.id;
+        opt.textContent = `${b.common} (${b.group})`;
+        if (b.id === birdId) opt.selected = true;
+        speciesSelect.appendChild(opt);
       });
 
       updateModalPreview(currentImg);
@@ -756,17 +828,14 @@
     function updateModalPreview(src) {
       const imgEl = document.getElementById("modal-preview-img");
       const phEl = document.getElementById("modal-preview-placeholder");
-      const chooseLabel = document.getElementById("btn-choose-file-label");
       if (src) {
         imgEl.src = src;
         imgEl.classList.remove("hidden");
         phEl.classList.add("hidden");
-        if (chooseLabel) chooseLabel.textContent = "Replace Photo";
       } else {
         imgEl.src = "";
         imgEl.classList.add("hidden");
         phEl.classList.remove("hidden");
-        if (chooseLabel) chooseLabel.textContent = "Upload Photo";
       }
     }
 
@@ -783,49 +852,43 @@
     async function saveEditModal() {
       if (!activeBirdId) return;
       const sourceId = activeBirdId;
-      const selectedTargetId = document.getElementById("modal-species-select").value || sourceId;
+      const targetId = document.getElementById("modal-species-select").value || sourceId;
       const urlVal = document.getElementById("modal-url-input").value.trim();
       const noteVal = document.getElementById("modal-note-input").value.trim();
 
-      // Determine final photo for this record
-      let finalDataUrl = "";
-      let finalPhotoUrl = "";
+      if (!birdEntries[sourceId]) birdEntries[sourceId] = {};
+      if (!birdEntries[targetId]) birdEntries[targetId] = {};
 
-      if (pendingPhotoCleared) {
-        finalDataUrl = "";
-        finalPhotoUrl = "";
-      } else if (pendingPhotoDataUrl) {
+      // Determine final photo data/url from modal edits
+      let finalDataUrl = pendingPhotoCleared ? "" : (pendingPhotoDataUrl || birdEntries[sourceId].photoDataUrl || "");
+      let finalUrl = pendingPhotoCleared ? "" : (urlVal || (!pendingPhotoDataUrl ? (birdEntries[sourceId].photoUrl || "") : ""));
+
+      if (pendingPhotoDataUrl) {
         finalDataUrl = pendingPhotoDataUrl;
-        finalPhotoUrl = "";
+        finalUrl = "";
       } else if (urlVal) {
-        finalPhotoUrl = urlVal;
+        finalUrl = urlVal;
         finalDataUrl = "";
-      } else {
-        const existingSource = birdEntries[sourceId] || {};
-        finalDataUrl = existingSource.photoDataUrl || "";
-        finalPhotoUrl = existingSource.photoUrl || "";
       }
 
-      // Case 1: User changed the Species dropdown to reassign to a different bird!
-      if (selectedTargetId !== sourceId) {
-        if (!birdEntries[selectedTargetId]) birdEntries[selectedTargetId] = {};
-
+      if (targetId !== sourceId) {
+        // User changed the species dropdown: move photo & note to targetId and clear sourceId
         if (finalDataUrl) {
-          birdEntries[selectedTargetId].photoDataUrl = finalDataUrl;
-          birdEntries[selectedTargetId].photoUrl = "";
-          await idbPutPhoto(selectedTargetId, finalDataUrl);
-        } else if (finalPhotoUrl) {
-          birdEntries[selectedTargetId].photoUrl = finalPhotoUrl;
-          birdEntries[selectedTargetId].photoDataUrl = "";
-          await idbDeletePhoto(selectedTargetId);
+          birdEntries[targetId].photoDataUrl = finalDataUrl;
+          birdEntries[targetId].photoUrl = "";
+          await idbPutPhoto(targetId, finalDataUrl);
+        } else if (finalUrl) {
+          birdEntries[targetId].photoUrl = finalUrl;
+          birdEntries[targetId].photoDataUrl = "";
+          await idbDeletePhoto(targetId);
         }
 
         if (noteVal) {
-          birdEntries[selectedTargetId].note = birdEntries[selectedTargetId].note
-            ? `${birdEntries[selectedTargetId].note} | ${noteVal}`
+          birdEntries[targetId].note = birdEntries[targetId].note
+            ? `${birdEntries[targetId].note} | ${noteVal}`
             : noteVal;
         }
-        birdEntries[selectedTargetId].updatedAt = Date.now();
+        birdEntries[targetId].updatedAt = Date.now();
 
         // Clear the old incorrect species entry
         birdEntries[sourceId] = { photoDataUrl: "", photoUrl: "", note: "", updatedAt: Date.now() };
@@ -833,25 +896,23 @@
 
         persistLocalMetadata();
         renderChecklist();
-        const targetBird = getAllSpecies().find((b) => b.id === selectedTargetId);
+        const targetBird = getAllSpecies().find((b) => b.id === targetId);
         closeEditModal();
-        showToast(`Moved & saved to ${targetBird ? targetBird.common : selectedTargetId}!`);
+        showToast(`Saved & moved to ${targetBird ? targetBird.common : targetId}`);
         return;
       }
 
-      // Case 2: Standard save on the current species
-      if (!birdEntries[sourceId]) birdEntries[sourceId] = {};
-
+      // Same species update
       if (pendingPhotoCleared) {
         birdEntries[sourceId].photoDataUrl = "";
         birdEntries[sourceId].photoUrl = "";
         await idbDeletePhoto(sourceId);
-      } else if (pendingPhotoDataUrl) {
-        birdEntries[sourceId].photoDataUrl = pendingPhotoDataUrl;
+      } else if (finalDataUrl) {
+        birdEntries[sourceId].photoDataUrl = finalDataUrl;
         birdEntries[sourceId].photoUrl = "";
-        await idbPutPhoto(sourceId, pendingPhotoDataUrl);
-      } else if (urlVal) {
-        birdEntries[sourceId].photoUrl = urlVal;
+        await idbPutPhoto(sourceId, finalDataUrl);
+      } else if (finalUrl) {
+        birdEntries[sourceId].photoUrl = finalUrl;
         birdEntries[sourceId].photoDataUrl = "";
         await idbDeletePhoto(sourceId);
       }
@@ -862,7 +923,7 @@
       persistLocalMetadata();
       renderChecklist();
       closeEditModal();
-      showToast("Field entry saved!");
+      showToast("Saved!");
     }
 
     async function handleDeletePhotoClick() {
@@ -870,7 +931,7 @@
       const btn = document.getElementById("btn-delete-photo");
       if (!deleteArmed) {
         deleteArmed = true;
-        btn.textContent = "Confirm Delete?";
+        btn.textContent = "Confirm?";
         btn.className = "px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition shadow";
         return;
       }
@@ -879,47 +940,54 @@
       pendingPhotoDataUrl = null;
       pendingPhotoCleared = true;
       document.getElementById("modal-url-input").value = "";
-      document.getElementById("modal-note-input").value = "";
       updateModalPreview("");
+      btn.classList.add("hidden");
+      deleteArmed = false;
 
-      birdEntries[birdId] = { photoDataUrl: "", photoUrl: "", note: "", updatedAt: Date.now() };
-      await idbDeletePhoto(birdId);
-      persistLocalMetadata();
-      renderChecklist();
-      closeEditModal();
-      showToast("Entry deleted");
-    }
-
-    async function handleCardDeleteClick(birdId) {
-      if (armedCardDeleteId !== birdId) {
-        armedCardDeleteId = birdId;
-        renderChecklist();
-        clearTimeout(window.__cardDeleteTimer);
-        window.__cardDeleteTimer = setTimeout(() => {
-          if (armedCardDeleteId === birdId) {
-            armedCardDeleteId = null;
-            renderChecklist();
-          }
-        }, 3000);
-        return;
+      if (birdEntries[birdId]) {
+        birdEntries[birdId].photoDataUrl = "";
+        birdEntries[birdId].photoUrl = "";
       }
-
-      armedCardDeleteId = null;
-      birdEntries[birdId] = { photoDataUrl: "", photoUrl: "", note: "", updatedAt: Date.now() };
       await idbDeletePhoto(birdId);
       persistLocalMetadata();
       renderChecklist();
-      showToast("Photo & note deleted");
+      showToast("Photo deleted");
     }
 
     // =========================================================================
     // 6. EVENT WIRING & BOOTSTRAP
     // =========================================================================
     function bindEvents() {
+      // Pagination forward/back arrow buttons
+      document.querySelectorAll("[data-page-action]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const action = btn.dataset.pageAction;
+          if (action === "prev" && currentPage > 1) {
+            currentPage--;
+            renderChecklist();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          } else if (action === "next" && currentPage < totalPages) {
+            currentPage++;
+            renderChecklist();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+        });
+      });
+
+      // Recalculate 5-row page size cleanly on window resize
+      let resizeTimer = null;
+      window.addEventListener("resize", () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          renderChecklist();
+        }, 120);
+      });
+
       // View tabs
       document.querySelectorAll(".view-tab").forEach((btn) => {
         btn.addEventListener("click", () => {
           currentView = btn.dataset.view;
+          currentPage = 1;
           document.querySelectorAll(".view-tab").forEach((b) => {
             if (b.dataset.view === currentView) {
               b.className = "view-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-emerald-500 text-slate-950";
@@ -934,26 +1002,52 @@
       // Search & group filter
       document.getElementById("search-input").addEventListener("input", (e) => {
         searchQuery = e.target.value;
+        currentPage = 1;
         renderChecklist();
       });
 
       document.getElementById("group-filter").addEventListener("change", (e) => {
         currentGroup = e.target.value;
+        currentPage = 1;
         renderChecklist();
       });
 
       // Delegated card actions (Edit button, Delete button, Lightbox image)
-      document.getElementById("bird-grid").addEventListener("click", (e) => {
+      document.getElementById("bird-grid").addEventListener("click", async (e) => {
         const editBtn = e.target.closest("[data-edit-id]");
         if (editBtn) {
           openEditModal(editBtn.dataset.editId);
           return;
         }
+
         const delBtn = e.target.closest("[data-card-delete-id]");
         if (delBtn) {
-          handleCardDeleteClick(delBtn.dataset.cardDeleteId);
+          const id = delBtn.dataset.cardDeleteId;
+          if (delBtn.dataset.armed !== "true") {
+            delBtn.dataset.armed = "true";
+            delBtn.textContent = "Confirm?";
+            delBtn.className = "px-2 py-1 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-[11px] font-bold transition shadow";
+            setTimeout(() => {
+              if (delBtn && delBtn.isConnected) {
+                delBtn.dataset.armed = "false";
+                delBtn.textContent = "Delete";
+                delBtn.className = "px-2 py-1 rounded-lg bg-rose-950/90 hover:bg-rose-600 text-rose-200 hover:text-white text-[11px] font-semibold border border-rose-500/40 backdrop-blur-sm transition shadow";
+              }
+            }, 3000);
+            return;
+          }
+          if (birdEntries[id]) {
+            birdEntries[id].photoDataUrl = "";
+            birdEntries[id].photoUrl = "";
+            birdEntries[id].updatedAt = Date.now();
+          }
+          await idbDeletePhoto(id);
+          persistLocalMetadata();
+          renderChecklist();
+          showToast("Photo deleted");
           return;
         }
+
         const lbImg = e.target.closest("[data-lightbox-id]");
         if (lbImg) {
           const id = lbImg.dataset.lightboxId;
@@ -994,15 +1088,6 @@
       };
       document.getElementById("btn-choose-file").addEventListener("click", triggerFilePicker);
       document.getElementById("btn-modal-edit-photo").addEventListener("click", triggerFilePicker);
-
-      // Update header preview text when user switches the Species dropdown in modal
-      document.getElementById("modal-species-select").addEventListener("change", (e) => {
-        const chosen = getAllSpecies().find((b) => b.id === e.target.value);
-        if (chosen) {
-          document.getElementById("modal-bird-name").textContent = chosen.common;
-          document.getElementById("modal-bird-sci").textContent = `${chosen.sci} • ${chosen.group}`;
-        }
-      });
 
       document.getElementById("hidden-photo-input").addEventListener("change", (e) => {
         const file = e.target.files?.[0];
