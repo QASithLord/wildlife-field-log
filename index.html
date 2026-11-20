@@ -1,1158 +1,1149 @@
-<!-- ... existing code ... -->
-                    <!-- Mobile Action Menu Button -->
-                    <div class="flex lg:hidden items-center gap-2">
-                        <button id="btn-cloud-mobile" onclick="openFirebaseModal()" class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-medium transition flex items-center gap-1" title="Firebase Cloud Sync">
-                            <span id="cloud-dot-mobile" class="w-2 h-2 rounded-full bg-slate-400"></span>
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
-                            </svg>
-                        </button>
-                        <button onclick="openAddSpeciesModal()" class="p-2.5 rounded-lg bg-forest-600 hover:bg-forest-500 text-white text-xs font-medium transition shadow-sm" title="Add Custom Species">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                            </svg>
-                        </button>
-                        <button onclick="openDataModal()" class="p-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-medium transition" title="GitHub JSON Backup / Restore">
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-                            </svg>
-                        </button>
-                    </div>
-                </div>
-<!-- ... existing code ... -->
-                    <!-- Desktop Utility Actions -->
-                    <div class="hidden lg:flex items-center gap-2 pl-2 border-l border-slate-800">
-                        <button id="btn-cloud-desktop" onclick="openFirebaseModal()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-medium transition">
-                            <span id="cloud-dot-desktop" class="w-2 h-2 rounded-full bg-slate-400"></span>
-                            <span id="cloud-label-desktop">Local Only</span>
-                        </button>
-                        <button onclick="openAddSpeciesModal()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-forest-600 hover:bg-forest-500 text-white text-xs font-medium transition shadow-sm">
-                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
-                            </svg>
-                            Add Species
-                        </button>
-                        <button onclick="openDataModal()" class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-200 text-xs font-medium transition">
-                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-                            </svg>
-                            Backup / JSON
-                        </button>
-                    </div>
-                </div>
-            </div>
-<!-- ... existing code ... -->
-        <!-- Active Filter Summary Banner -->
-        <div class="flex flex-wrap items-center justify-between gap-2 mb-5 text-xs text-slate-400">
-            <div id="results-summary" class="font-mono">Loading checklist...</div>
-            <div class="flex items-center gap-2">
-                <span id="storage-status-dot" class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
-                <span id="storage-status-text">IndexedDB Local Storage Active</span>
-            </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wildlife Field Log | Cyndy's Personal Wildlife Photo Archive</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-canvas: #0f1713;
+      --bg-card: #16221c;
+      --bg-elevated: #1e2e26;
+      --border-subtle: #2b4035;
+      --accent-moss: #6ee7b7;
+      --accent-amber: #fbbf24;
+      --text-primary: #f1f5f3;
+      --text-muted: #9cb3a7;
+    }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg-canvas);
+      color: var(--text-primary);
+    }
+    h1, h2, .font-serif-display {
+      font-family: 'Fraunces', Georgia, serif;
+    }
+    .font-mono-tech {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f1713;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #2b4035;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3d5a4b;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased selection:bg-emerald-500/30 selection:text-emerald-200">
+
+  <!-- Hidden file inputs for photo uploads & JSON restore -->
+  <input type="file" id="hidden-photo-input" accept="image/*" class="hidden" />
+  <input type="file" id="hidden-import-input" accept=".json,application/json" class="hidden" />
+
+  <!-- Top Header -->
+  <header class="sticky top-0 z-30 bg-[#0f1713]/95 backdrop-blur border-b border-[#2b4035]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2.5">
+            <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-300">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </span>
+            <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-white">Wildlife Field Log</h1>
+          </div>
+          <p class="text-xs sm:text-sm text-[#9cb3a7] mt-0.5 ml-10.5">Cyndy's Personal Wildlife Photo Archive &bull; Billy Frank Jr. Nisqually NWR Baseline</p>
         </div>
 
-        <!-- Species Cards Grid -->
-        <div id="birds-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Cards injected dynamically by JS -->
+        <!-- Action Toolbar -->
+        <div class="flex flex-wrap items-center gap-2">
+          <button id="btn-add-species" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-200 transition">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            Add Species
+          </button>
+
+          <button id="btn-export-json" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#16221c] hover:bg-[#1e2e26] border border-[#2b4035] text-slate-200 transition" title="Export JSON backup">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+            Backup JSON
+          </button>
+
+          <button id="btn-import-json" type="button" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium bg-[#16221c] hover:bg-[#1e2e26] border border-[#2b4035] text-slate-200 transition" title="Restore JSON backup">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+            Restore JSON
+          </button>
+        </div>
+      </div>
+
+      <!-- Telemetry Stats & Filter Bar -->
+      <div class="mt-4 pt-3 border-t border-[#2b4035]/70 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <!-- View Tabs -->
+        <div class="inline-flex p-1 rounded-xl bg-[#16221c] border border-[#2b4035] self-start">
+          <button type="button" data-view="all" class="view-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-emerald-500 text-slate-950">
+            All Birds (<span id="count-all">0</span>)
+          </button>
+          <button type="button" data-view="photographed" class="view-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition text-[#9cb3a7] hover:text-white">
+            Photographed (<span id="count-photographed">0</span>)
+          </button>
+          <button type="button" data-view="needed" class="view-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition text-[#9cb3a7] hover:text-white">
+            Needed (<span id="count-needed">0</span>)
+          </button>
         </div>
 
-        <!-- Empty State -->
-        <div id="empty-state" class="hidden flex-col items-center justify-center text-center py-16 px-4 bg-slate-900/50 border border-slate-800/80 rounded-2xl">
-            <div class="w-14 h-14 rounded-2xl bg-slate-800/80 flex items-center justify-center text-slate-400 mb-4">
-                <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        <!-- Search & Group Filter -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 flex-1 lg:max-w-xl">
+          <div class="relative flex-1">
+            <svg class="w-4 h-4 text-[#9cb3a7] absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35m0 0A7.5 7.5 0 103.5 10.5a7.5 7.5 0 0013.15 6.15z" />
+            </svg>
+            <input id="search-input" type="text" placeholder="Search species, scientific name, or note..." class="w-full pl-9 pr-3 py-1.5 rounded-lg bg-[#16221c] border border-[#2b4035] text-xs text-white placeholder-[#9cb3a7]/70 focus:outline-none focus:border-emerald-400" />
+          </div>
+          <select id="group-filter" class="px-3 py-1.5 rounded-lg bg-[#16221c] border border-[#2b4035] text-xs text-slate-200 focus:outline-none focus:border-emerald-400">
+            <option value="ALL">All Taxonomic Groups</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="mt-3 flex items-center gap-3">
+        <div class="flex-1 h-1.5 bg-[#16221c] rounded-full overflow-hidden border border-[#2b4035]/60">
+          <div id="progress-bar" class="h-full bg-gradient-to-r from-emerald-500 to-teal-300 transition-all duration-300" style="width: 0%"></div>
+        </div>
+        <span id="progress-label" class="font-mono-tech text-[11px] text-emerald-300 shrink-0">0% Photographed</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Grid -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 py-6">
+    <div id="bird-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="hidden py-16 text-center">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#16221c] border border-[#2b4035] text-[#9cb3a7] mb-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z"/>
+        </svg>
+      </div>
+      <h3 class="text-base font-semibold text-white">No matching species found</h3>
+      <p class="text-xs text-[#9cb3a7] mt-1">Try clearing your search filter or switching between All, Photographed, and Needed views.</p>
+    </div>
+  </main>
+
+  <!-- Ultra-Compact Upload / Edit / Reassign / Delete Modal (Strictly <= 50% Viewport Height) -->
+  <div id="edit-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-2 sm:p-4">
+    <div class="bg-[#16221c] border border-[#2b4035] rounded-2xl w-full max-w-md max-h-[50vh] flex flex-col shadow-2xl overflow-hidden">
+      <!-- Compact Modal Header -->
+      <div class="px-3.5 py-2 border-b border-[#2b4035] flex items-center justify-between gap-2 shrink-0 bg-[#121c17]">
+        <div class="min-w-0 flex items-center gap-2">
+          <span class="text-xs font-bold text-white truncate" id="modal-bird-name">Species Name</span>
+          <span class="text-[10px] italic text-[#9cb3a7] truncate hidden sm:inline" id="modal-bird-sci">Scientific name</span>
+        </div>
+        <button id="btn-close-modal" type="button" class="p-1 rounded-lg text-[#9cb3a7] hover:text-white hover:bg-[#1e2e26] transition shrink-0" title="Close">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+
+      <!-- Compact Side-by-Side Body (Fits comfortably inside 50vh without hiding Save) -->
+      <div class="p-3 overflow-y-auto flex-1 min-h-0">
+        <div class="flex flex-col sm:flex-row gap-3 items-stretch">
+          <!-- Left: Compact Thumbnail Preview + Edit Photo Trigger -->
+          <div class="sm:w-28 shrink-0 flex flex-row sm:flex-col gap-2">
+            <div class="relative w-24 h-20 sm:w-28 sm:h-24 rounded-xl bg-[#0f1713] border border-[#2b4035] overflow-hidden flex items-center justify-center shrink-0">
+              <img id="modal-preview-img" src="" alt="Preview" class="hidden w-full h-full object-cover" />
+              <div id="modal-preview-placeholder" class="text-center px-1 text-[#9cb3a7]">
+                <svg class="w-5 h-5 mx-auto opacity-60" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
+                <span class="block text-[9px] mt-0.5 leading-tight">No photo</span>
+              </div>
             </div>
-            <h3 class="text-base font-semibold text-white mb-1">No matching bird species found</h3>
-            <p class="text-xs sm:text-sm text-slate-400 max-w-md mb-5">Try clearing your search query, switching filter tabs, or resetting the taxonomic group filter.</p>
-            <button onclick="resetFilters()" class="px-4 py-2 rounded-xl bg-forest-600 hover:bg-forest-500 text-white text-xs sm:text-sm font-medium transition">
-                Reset All Filters
-            </button>
+
+            <div class="flex-1 flex flex-col justify-center gap-1.5">
+              <button id="btn-choose-file" type="button" class="w-full py-1.5 px-2 rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 border border-emerald-500/40 text-emerald-200 text-[11px] font-semibold flex items-center justify-center gap-1 transition">
+                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>
+                <span id="btn-choose-file-label">Upload / Edit</span>
+              </button>
+              <input id="modal-url-input" type="url" placeholder="Or image URL..." class="w-full px-2 py-1 rounded-lg bg-[#0f1713] border border-[#2b4035] text-[10px] text-white placeholder-[#9cb3a7]/60 focus:outline-none focus:border-emerald-400" />
+            </div>
+          </div>
+
+          <!-- Right: Species Selector (Fix wrong bird) + Date/Location Field Note -->
+          <div class="flex-1 min-w-0 space-y-2 text-xs">
+            <div>
+              <label for="modal-species-select" class="block text-[10px] font-semibold uppercase tracking-wider text-amber-300/90 mb-0.5">
+                Species (Change if wrong bird)
+              </label>
+              <select id="modal-species-select" class="w-full px-2.5 py-1.5 rounded-lg bg-[#0f1713] border border-[#2b4035] text-xs text-white focus:outline-none focus:border-amber-400">
+                <!-- Populated dynamically with all species grouped taxonomically -->
+              </select>
+            </div>
+
+            <div>
+              <label for="modal-note-input" class="block text-[10px] font-semibold uppercase tracking-wider text-[#9cb3a7] mb-0.5">
+                Date Taken / Location Note
+              </label>
+              <input id="modal-note-input" type="text" placeholder="e.g., 2026-11-19 • Nisqually Twin Barns" class="w-full px-2.5 py-1.5 rounded-lg bg-[#0f1713] border border-[#2b4035] text-xs text-white placeholder-[#9cb3a7]/60 focus:outline-none focus:border-emerald-400" />
+            </div>
+          </div>
         </div>
-    </main>
+      </div>
 
-    <!-- Hidden File Input for Direct Image Selection -->
-    <input type="file" id="hidden-photo-input" accept="image/*" class="hidden" onchange="handleFileSelected(event)">
-
-    <!-- MODAL 1: Compact Photo Attach / Edit / Reassign Modal -->
-    <div id="photo-modal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full max-h-[86vh] flex flex-col overflow-hidden shadow-2xl animate-fade-in">
-            <!-- Sticky Compact Header -->
-            <div class="flex items-center justify-between px-4 py-3 border-b border-slate-800 shrink-0 bg-slate-900">
-                <div class="min-w-0 pr-2">
-                    <h3 id="photo-modal-title" class="text-sm sm:text-base font-bold text-white truncate">Attach Bird Photograph</h3>
-                    <p id="photo-modal-subtitle" class="text-[11px] text-slate-400 italic truncate">Scientific Name</p>
-                </div>
-                <button type="button" onclick="closePhotoModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition shrink-0" title="Close">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Scrollable Compact Body -->
-            <div class="p-4 space-y-3 overflow-y-auto flex-1">
-                <!-- Current Photo Preview (Compact max-height so modal never overflows) -->
-                <div id="photo-modal-preview-wrap" class="hidden">
-                    <div class="relative rounded-xl overflow-hidden bg-slate-950 border border-slate-800 h-36 sm:h-40 flex items-center justify-center">
-                        <img id="photo-modal-preview-img" src="" alt="Preview" class="w-full h-full object-contain">
-                        <span id="photo-pending-badge" class="hidden absolute top-2 left-2 px-2 py-0.5 rounded bg-amber-600/95 text-white text-[10px] font-mono font-semibold shadow">
-                            UNSAVED PREVIEW
-                        </span>
-                    </div>
-                </div>
-
-                <!-- Reassign / Move Photo to Another Species (Visible when a photo exists) -->
-                <div id="reassign-species-wrap" class="hidden p-3 rounded-xl bg-amber-950/20 border border-amber-500/30">
-                    <label for="reassign-species-select" class="block text-[11px] font-mono uppercase tracking-wider text-amber-300 mb-1.5">
-                        Wrong Bird? Move Photo & Note To:
-                    </label>
-                    <div class="flex flex-col sm:flex-row gap-2">
-                        <select 
-                            id="reassign-species-select" 
-                            class="flex-1 px-2.5 py-1.5 bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-lg text-xs text-white outline-none"
-                        >
-                            <!-- Populated dynamically with grouped species -->
-                        </select>
-                        <button 
-                            type="button"
-                            onclick="reassignPhotoToSpecies()" 
-                            class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition shrink-0 shadow-sm"
-                        >
-                            Move Species
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Option A: Upload Local High-Res Photo -->
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-forest-500/60 transition flex items-center justify-between gap-3">
-                    <div class="min-w-0">
-                        <div class="text-xs sm:text-sm font-semibold text-white">Upload Photo from Device</div>
-                        <p class="text-[11px] text-slate-400 truncate">Auto-optimized to 2048px JPEG (Local + Cloud)</p>
-                    </div>
-                    <button type="button" onclick="triggerLocalFileUpload()" class="px-3.5 py-2 rounded-lg bg-forest-600 hover:bg-forest-500 text-white text-xs font-semibold transition shrink-0 shadow">
-                        Choose File
-                    </button>
-                </div>
-
-                <!-- Option B: External Image URL -->
-                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
-                    <label for="photo-url-input" class="block text-xs font-semibold text-white mb-1">Or Link External Photo URL</label>
-                    <div class="flex gap-2">
-                        <input 
-                            type="url" 
-                            id="photo-url-input" 
-                            oninput="previewUrlInput(this.value)"
-                            placeholder="https://images.pixieset.com/... or ./photos/bird.jpg" 
-                            class="flex-1 min-w-0 px-2.5 py-1.5 bg-slate-900 border border-slate-700 focus:border-forest-500 rounded-lg text-xs text-white placeholder-slate-500 outline-none"
-                        >
-                        <button type="button" onclick="applyPhotoUrlToPreview()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white text-xs font-medium transition shrink-0">
-                            Load URL
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Quick Note Edit inside Modal -->
-                <div>
-                    <label for="photo-modal-note" class="block text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-1">Date Taken & Location Note</label>
-                    <input 
-                        type="text" 
-                        id="photo-modal-note" 
-                        placeholder="e.g., 2026-11-19 • Nisqually Twin Barns Boardwalk" 
-                        class="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-forest-500 rounded-lg text-xs text-white placeholder-slate-500 outline-none"
-                    >
-                </div>
-            </div>
-
-            <!-- Sticky Action Footer: Always visible & easy to tap -->
-            <div class="px-4 py-3 bg-slate-950 border-t border-slate-800 flex items-center justify-between gap-2 shrink-0">
-                <button type="button" id="remove-photo-btn" onclick="handleDeletePhotoClick()" class="hidden inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-rose-300 bg-rose-950/60 hover:bg-rose-900/80 border border-rose-800/70 transition">
-                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
-                    <span id="remove-photo-btn-text">Delete Photo</span>
-                </button>
-                <div class="flex items-center gap-2 ml-auto">
-                    <button type="button" onclick="closePhotoModal()" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition">
-                        Cancel
-                    </button>
-                    <button type="button" id="save-done-btn" onclick="saveModalChangesAndClose()" class="px-4 py-2 rounded-lg bg-forest-600 hover:bg-forest-500 text-white text-xs font-semibold transition shadow flex items-center gap-1.5">
-                        <span id="save-done-text">Save & Done</span>
-                    </button>
-                </div>
-            </div>
+      <!-- Sticky Modal Footer: Always Visible Without Scrolling -->
+      <div class="px-3.5 py-2 bg-[#0f1713] border-t border-[#2b4035] flex items-center justify-between gap-2 shrink-0">
+        <div class="flex items-center gap-1.5">
+          <button id="btn-modal-edit-photo" type="button" class="px-2.5 py-1.5 rounded-lg bg-[#16221c] hover:bg-[#1e2e26] border border-[#2b4035] text-emerald-200 text-xs font-semibold transition">
+            Edit Photo
+          </button>
+          <button id="btn-delete-photo" type="button" class="px-2.5 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-200 text-xs font-semibold transition">
+            Delete
+          </button>
         </div>
+        <div class="flex items-center gap-1.5">
+          <button id="btn-cancel-modal" type="button" class="px-2.5 py-1.5 rounded-lg bg-[#16221c] hover:bg-[#1e2e26] border border-[#2b4035] text-slate-300 text-xs font-medium transition">
+            Cancel
+          </button>
+          <button id="btn-save-modal" type="button" class="px-3.5 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold transition shadow-md">
+            Save
+          </button>
+        </div>
+      </div>
     </div>
-<!-- ... existing code ... -->
-                <div class="p-4 rounded-xl bg-rose-950/20 border border-rose-900/40 flex items-center justify-between gap-3">
-                    <div>
-                        <h4 class="text-xs font-semibold text-rose-300">Factory Reset Checklist</h4>
-                        <p class="text-[11px] text-slate-400">Clears all uploaded photos, notes, and custom species back to the default Nisqually NWR baseline.</p>
-                    </div>
-                    <button id="reset-confirm-btn" onclick="handleFactoryReset()" class="px-3 py-1.5 rounded-lg bg-rose-900/60 hover:bg-rose-800 text-rose-200 text-xs font-medium shrink-0 transition">
-                        Reset All
-                    </button>
-                </div>
-            </div>
+  </div>
+
+  <!-- Add Custom Species Modal -->
+  <div id="add-species-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4">
+    <div class="bg-[#16221c] border border-[#2b4035] rounded-2xl w-full max-w-md overflow-hidden shadow-2xl">
+      <div class="px-4 py-3 border-b border-[#2b4035] flex items-center justify-between">
+        <h2 class="text-base font-bold text-white">Add Custom Species</h2>
+        <button id="btn-close-add-modal" type="button" class="p-1 rounded-lg text-[#9cb3a7] hover:text-white">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+      </div>
+      <div class="p-4 space-y-3 text-xs">
+        <div>
+          <label class="block text-[11px] text-[#9cb3a7] mb-1">Common Name *</label>
+          <input id="new-bird-common" type="text" placeholder="e.g., Black-faced Spoonbill" class="w-full px-3 py-2 rounded-lg bg-[#0f1713] border border-[#2b4035] text-white focus:outline-none focus:border-emerald-400" />
         </div>
-    </div>
-
-    <!-- MODAL 5: Firebase Cloud Storage & Firestore Sync Setup -->
-    <div id="firebase-modal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full max-h-[88vh] flex flex-col overflow-hidden shadow-2xl animate-fade-in">
-            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-800 shrink-0">
-                <div>
-                    <h3 class="text-base font-bold text-white">Firebase Cloud Sync (Storage + Firestore)</h3>
-                    <p id="firebase-status-sub" class="text-xs text-slate-400">Sync photos & field notes across desktop and mobile</p>
-                </div>
-                <button type="button" onclick="closeFirebaseModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-
-            <div class="p-5 space-y-4 overflow-y-auto flex-1">
-                <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800">
-                    <label for="firebase-config-input" class="block text-xs font-semibold text-white mb-1">
-                        Paste Firebase Web Config (<code class="text-emerald-400">firebaseConfig</code>)
-                    </label>
-                    <p class="text-[11px] text-slate-400 mb-2">
-                        Paste either raw JSON or the full <code class="text-slate-300">const firebaseConfig = { ... };</code> snippet from your Firebase Project Settings.
-                    </p>
-                    <textarea 
-                        id="firebase-config-input" 
-                        rows="5" 
-                        placeholder='{"apiKey": "...", "authDomain": "...", "projectId": "...", "storageBucket": "...", "appId": "..."}'
-                        class="w-full p-2.5 bg-slate-900 border border-slate-700 focus:border-forest-500 rounded-xl font-mono text-[11px] text-emerald-300 placeholder-slate-600 outline-none"
-                    ></textarea>
-                    <div class="mt-2.5 flex flex-wrap items-center gap-2">
-                        <button type="button" onclick="saveAndConnectFirebase()" class="px-3.5 py-2 rounded-xl bg-forest-600 hover:bg-forest-500 text-white text-xs font-semibold transition">
-                            Connect & Sync Cloud
-                        </button>
-                        <button type="button" id="btn-push-local-cloud" onclick="pushLocalArchiveToFirebase()" class="hidden px-3.5 py-2 rounded-xl bg-sky-700 hover:bg-sky-600 text-white text-xs font-semibold transition">
-                            Push Local → Cloud
-                        </button>
-                        <button type="button" id="btn-disconnect-firebase" onclick="disconnectFirebase()" class="hidden px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium transition ml-auto">
-                            Disconnect
-                        </button>
-                    </div>
-                </div>
-
-                <details class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 text-xs text-slate-300">
-                    <summary class="font-semibold text-white cursor-pointer select-none">Firebase Rules Quick Setup (Firestore & Storage)</summary>
-                    <div class="mt-2.5 space-y-2 text-[11px] text-slate-400">
-                        <p>1. Enable <strong class="text-slate-200">Anonymous Sign-In</strong> in Firebase Authentication.</p>
-                        <p>2. In <strong class="text-slate-200">Firestore Rules</strong> & <strong class="text-slate-200">Storage Rules</strong>, allow authenticated access to your archive path:</p>
-                        <pre class="p-2 rounded-lg bg-slate-900 border border-slate-800 font-mono text-[10px] text-emerald-300 overflow-x-auto">allow read, write: if request.auth != null;</pre>
-                    </div>
-                </details>
-            </div>
+        <div>
+          <label class="block text-[11px] text-[#9cb3a7] mb-1">Scientific Name</label>
+          <input id="new-bird-sci" type="text" placeholder="e.g., Platalea minor" class="w-full px-3 py-2 rounded-lg bg-[#0f1713] border border-[#2b4035] text-white focus:outline-none focus:border-emerald-400" />
         </div>
+        <div>
+          <label class="block text-[11px] text-[#9cb3a7] mb-1">Taxonomic Group</label>
+          <input id="new-bird-group" type="text" value="Custom / Trip Additions" class="w-full px-3 py-2 rounded-lg bg-[#0f1713] border border-[#2b4035] text-white focus:outline-none focus:border-emerald-400" />
+        </div>
+      </div>
+      <div class="px-4 py-3 bg-[#0f1713] border-t border-[#2b4035] flex justify-end gap-2">
+        <button id="btn-cancel-add-modal" type="button" class="px-3 py-1.5 rounded-lg bg-[#16221c] border border-[#2b4035] text-slate-300 text-xs">Cancel</button>
+        <button id="btn-confirm-add-species" type="button" class="px-4 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-bold">Add to Checklist</button>
+      </div>
     </div>
+  </div>
 
-    <!-- Non-Blocking Toast Notification -->
-    <div id="toast" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-<!-- ... existing code ... -->
-        /**
-         * ============================================================================
-         * 2. LOCAL STORAGE + INDEXEDDB STORAGE LAYER (Zero Silent Failures)
-         * ============================================================================
-         */
-        const DB_NAME = 'NisquallyFieldLogDB';
-        const DB_VERSION = 1;
-        const STORE_RECORDS = 'birdRecords'; // Stores { id, note, photoDataUrl, photoUrl, cloudStoragePath, updatedAt }
-        const STORE_CUSTOM = 'customSpecies'; // Stores custom added bird objects
-        const LS_RECORDS_BACKUP_KEY = 'wildlifeFieldLog_records_v1';
-        const LS_CUSTOM_BACKUP_KEY = 'wildlifeFieldLog_custom_v1';
-        const LS_FIREBASE_CFG_KEY = 'wildlifeFieldLog_firebaseConfig_v1';
+  <!-- Fullscreen Lightbox Modal -->
+  <div id="lightbox-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/90 backdrop-blur-md p-4">
+    <button id="btn-close-lightbox" type="button" class="absolute top-4 right-4 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition">
+      <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    </button>
+    <div class="max-w-5xl max-h-[90vh] flex flex-col items-center">
+      <img id="lightbox-img" src="" alt="Full view" class="max-h-[78vh] w-auto rounded-xl shadow-2xl border border-white/10 object-contain" />
+      <div class="mt-3 text-center">
+        <h3 id="lightbox-title" class="text-lg font-bold text-white"></h3>
+        <p id="lightbox-caption" class="text-xs text-emerald-300 mt-0.5"></p>
+      </div>
+    </div>
+  </div>
 
-        let db = null;
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-4 right-4 z-50 hidden items-center gap-2 px-4 py-2.5 rounded-xl bg-[#1e2e26] border border-emerald-500/40 text-xs font-medium text-white shadow-xl">
+    <span id="toast-msg">Saved</span>
+  </div>
 
-        function initDB() {
-            return new Promise((resolve, reject) => {
-                if (!window.indexedDB) {
-                    reject(new Error('IndexedDB unavailable'));
-                    return;
-                }
-                const request = indexedDB.open(DB_NAME, DB_VERSION);
+  <script>
+    // =========================================================================
+    // 1. BILLY FRANK JR. NISQUALLY NWR BASELINE CHECKLIST (TAXONOMIC ORDER)
+    // =========================================================================
+    const BASELINE_BIRDS = [
+      // Waterfowl
+      { id: "cackling-goose", common: "Cackling Goose", sci: "Branta hutchinsii", group: "Waterfowl" },
+      { id: "canada-goose", common: "Canada Goose", sci: "Branta canadensis", group: "Waterfowl" },
+      { id: "trumpeter-swan", common: "Trumpeter Swan", sci: "Cygnus buccinator", group: "Waterfowl" },
+      { id: "tundra-swan", common: "Tundra Swan", sci: "Cygnus columbianus", group: "Waterfowl" },
+      { id: "wood-duck", common: "Wood Duck", sci: "Aix sponsa", group: "Waterfowl" },
+      { id: "blue-winged-teal", common: "Blue-winged Teal", sci: "Spatula discors", group: "Waterfowl" },
+      { id: "cinnamon-teal", common: "Cinnamon Teal", sci: "Spatula cyanoptera", group: "Waterfowl" },
+      { id: "northern-shoveler", common: "Northern Shoveler", sci: "Spatula clypeata", group: "Waterfowl" },
+      { id: "gadwall", common: "Gadwall", sci: "Mareca strepera", group: "Waterfowl" },
+      { id: "eurasian-wigeon", common: "Eurasian Wigeon", sci: "Mareca penelope", group: "Waterfowl" },
+      { id: "american-wigeon", common: "American Wigeon", sci: "Mareca americana", group: "Waterfowl" },
+      { id: "mallard", common: "Mallard", sci: "Anas platyrhynchos", group: "Waterfowl" },
+      { id: "northern-pintail", common: "Northern Pintail", sci: "Anas acuta", group: "Waterfowl" },
+      { id: "green-winged-teal", common: "Green-winged Teal", sci: "Anas crecca", group: "Waterfowl" },
+      { id: "canvasback", common: "Canvasback", sci: "Aythya valisineria", group: "Waterfowl" },
+      { id: "ring-necked-duck", common: "Ring-necked Duck", sci: "Aythya collaris", group: "Waterfowl" },
+      { id: "greater-scaup", common: "Greater Scaup", sci: "Aythya marila", group: "Waterfowl" },
+      { id: "lesser-scaup", common: "Lesser Scaup", sci: "Aythya affinis", group: "Waterfowl" },
+      { id: "surf-scoter", common: "Surf Scoter", sci: "Melanitta perspicillata", group: "Waterfowl" },
+      { id: "white-winged-scoter", common: "White-winged Scoter", sci: "Melanitta deglandi", group: "Waterfowl" },
+      { id: "bufflehead", common: "Bufflehead", sci: "Bucephala albeola", group: "Waterfowl" },
+      { id: "common-goldeneye", common: "Common Goldeneye", sci: "Bucephala clangula", group: "Waterfowl" },
+      { id: "barrows-goldeneye", common: "Barrow's Goldeneye", sci: "Bucephala islandica", group: "Waterfowl" },
+      { id: "hooded-merganser", common: "Hooded Merganser", sci: "Lophodytes cucullatus", group: "Waterfowl" },
+      { id: "common-merganser", common: "Common Merganser", sci: "Mergus merganser", group: "Waterfowl" },
+      { id: "red-breasted-merganser", common: "Red-breasted Merganser", sci: "Mergus serrator", group: "Waterfowl" },
+      { id: "ruddy-duck", common: "Ruddy Duck", sci: "Oxyura jamaicensis", group: "Waterfowl" },
 
-                request.onupgradeneeded = (event) => {
-                    const database = event.target.result;
-                    if (!database.objectStoreNames.contains(STORE_RECORDS)) {
-                        database.createObjectStore(STORE_RECORDS, { keyPath: 'id' });
-                    }
-                    if (!database.objectStoreNames.contains(STORE_CUSTOM)) {
-                        database.createObjectStore(STORE_CUSTOM, { keyPath: 'id' });
-                    }
-                };
+      // Grebes, Pigeons & Hummingbirds
+      { id: "pied-billed-grebe", common: "Pied-billed Grebe", sci: "Podilymbus podiceps", group: "Grebes & Loons" },
+      { id: "horned-grebe", common: "Horned Grebe", sci: "Podiceps auritus", group: "Grebes & Loons" },
+      { id: "red-necked-grebe", common: "Red-necked Grebe", sci: "Podiceps grisegena", group: "Grebes & Loons" },
+      { id: "western-grebe", common: "Western Grebe", sci: "Aechmophorus occidentalis", group: "Grebes & Loons" },
+      { id: "common-loon", common: "Common Loon", sci: "Gavia immer", group: "Grebes & Loons" },
+      { id: "band-tailed-pigeon", common: "Band-tailed Pigeon", sci: "Patagioenas fasciata", group: "Pigeons & Hummingbirds" },
+      { id: "mourning-dove", common: "Mourning Dove", sci: "Zenaida macroura", group: "Pigeons & Hummingbirds" },
+      { id: "annas-hummingbird", common: "Anna's Hummingbird", sci: "Calypte anna", group: "Pigeons & Hummingbirds" },
+      { id: "rufous-hummingbird", common: "Rufous Hummingbird", sci: "Selasphorus rufus", group: "Pigeons & Hummingbirds" },
 
-                request.onsuccess = (event) => {
-                    db = event.target.result;
-                    resolve(db);
-                };
+      // Rails & Shorebirds
+      { id: "virginia-rail", common: "Virginia Rail", sci: "Rallus limicola", group: "Rails & Shorebirds" },
+      { id: "sora", common: "Sora", sci: "Porzana carolina", group: "Rails & Shorebirds" },
+      { id: "american-coot", common: "American Coot", sci: "Fulica americana", group: "Rails & Shorebirds" },
+      { id: "killdeer", common: "Killdeer", sci: "Charadrius vociferus", group: "Rails & Shorebirds" },
+      { id: "semipalmated-plover", common: "Semipalmated Plover", sci: "Charadrius semipalmatus", group: "Rails & Shorebirds" },
+      { id: "dunlin", common: "Dunlin", sci: "Calidris alpina", group: "Rails & Shorebirds" },
+      { id: "least-sandpiper", common: "Least Sandpiper", sci: "Calidris minutilla", group: "Rails & Shorebirds" },
+      { id: "western-sandpiper", common: "Western Sandpiper", sci: "Calidris mauri", group: "Rails & Shorebirds" },
+      { id: "long-billed-dowitcher", common: "Long-billed Dowitcher", sci: "Limnodromus scolopaceus", group: "Rails & Shorebirds" },
+      { id: "wilsons-snipe", common: "Wilson's Snipe", sci: "Gallinago delicata", group: "Rails & Shorebirds" },
+      { id: "spotted-sandpiper", common: "Spotted Sandpiper", sci: "Actitis macularius", group: "Rails & Shorebirds" },
+      { id: "greater-yellowlegs", common: "Greater Yellowlegs", sci: "Tringa melanoleuca", group: "Rails & Shorebirds" },
+      { id: "lesser-yellowlegs", common: "Lesser Yellowlegs", sci: "Tringa flavipes", group: "Rails & Shorebirds" },
 
-                request.onerror = (event) => {
-                    console.error('IndexedDB error:', event.target.error);
-                    reject(event.target.error);
-                };
-            });
-        }
+      // Gulls, Terns, Cormorants & Herons
+      { id: "bonapartes-gull", common: "Bonaparte's Gull", sci: "Chroicocephalus philadelphia", group: "Gulls & Terns" },
+      { id: "short-billed-gull", common: "Short-billed Gull", sci: "Larus brachyrhynchus", group: "Gulls & Terns" },
+      { id: "ring-billed-gull", common: "Ring-billed Gull", sci: "Larus delawarensis", group: "Gulls & Terns" },
+      { id: "california-gull", common: "California Gull", sci: "Larus californicus", group: "Gulls & Terns" },
+      { id: "glaucous-winged-gull", common: "Glaucous-winged Gull", sci: "Larus glaucescens", group: "Gulls & Terns" },
+      { id: "caspian-tern", common: "Caspian Tern", sci: "Hydroprogne caspia", group: "Gulls & Terns" },
+      { id: "brandts-cormorant", common: "Brandt's Cormorant", sci: "Urile penicillatus", group: "Cormorants & Herons" },
+      { id: "pelagic-cormorant", common: "Pelagic Cormorant", sci: "Urile pelagicus", group: "Cormorants & Herons" },
+      { id: "double-crested-cormorant", common: "Double-crested Cormorant", sci: "Nannopterum auritum", group: "Cormorants & Herons" },
+      { id: "american-bittern", common: "American Bittern", sci: "Botaurus lentiginosus", group: "Cormorants & Herons" },
+      { id: "great-blue-heron", common: "Great Blue Heron", sci: "Ardea herodias", group: "Cormorants & Herons" },
+      { id: "great-egret", common: "Great Egret", sci: "Ardea alba", group: "Cormorants & Herons" },
+      { id: "green-heron", common: "Green Heron", sci: "Butorides virescens", group: "Cormorants & Herons" },
 
-        function syncMirrorToLocalStorage() {
-            try {
-                // Mirror lightweight metadata + URLs to localStorage as an extra safety net
-                const liteRecords = {};
-                Object.keys(recordsMap).forEach(id => {
-                    const r = recordsMap[id];
-                    liteRecords[id] = {
-                        id: r.id,
-                        note: r.note || '',
-                        photoUrl: r.photoUrl || '',
-                        cloudStoragePath: r.cloudStoragePath || '',
-                        updatedAt: r.updatedAt || ''
-                    };
-                });
-                localStorage.setItem(LS_RECORDS_BACKUP_KEY, JSON.stringify(liteRecords));
+      // Raptors, Owls & Kingfishers
+      { id: "turkey-vulture", common: "Turkey Vulture", sci: "Cathartes aura", group: "Raptors & Owls" },
+      { id: "osprey", common: "Osprey", sci: "Pandion haliaetus", group: "Raptors & Owls" },
+      { id: "northern-harrier", common: "Northern Harrier", sci: "Circus hudsonius", group: "Raptors & Owls" },
+      { id: "sharp-shinned-hawk", common: "Sharp-shinned Hawk", sci: "Accipiter striatus", group: "Raptors & Owls" },
+      { id: "coopers-hawk", common: "Cooper's Hawk", sci: "Accipiter cooperii", group: "Raptors & Owls" },
+      { id: "bald-eagle", common: "Bald Eagle", sci: "Haliaeetus leucocephalus", group: "Raptors & Owls" },
+      { id: "red-tailed-hawk", common: "Red-tailed Hawk", sci: "Buteo jamaicensis", group: "Raptors & Owls" },
+      { id: "barn-owl", common: "Barn Owl", sci: "Tyto alba", group: "Raptors & Owls" },
+      { id: "great-horned-owl", common: "Great Horned Owl", sci: "Bubo virginianus", group: "Raptors & Owls" },
+      { id: "barred-owl", common: "Barred Owl", sci: "Strix varia", group: "Raptors & Owls" },
+      { id: "short-eared-owl", common: "Short-eared Owl", sci: "Asio flammeus", group: "Raptors & Owls" },
+      { id: "belted-kingfisher", common: "Belted Kingfisher", sci: "Megaceryle alcyon", group: "Kingfishers & Woodpeckers" },
 
-                const customOnly = allSpecies.filter(b => b.isCustom);
-                localStorage.setItem(LS_CUSTOM_BACKUP_KEY, JSON.stringify(customOnly));
-            } catch (e) {
-                // Ignore localStorage quota warnings when IndexedDB holds large images
-            }
-        }
+      // Woodpeckers & Falcons
+      { id: "red-breasted-sapsucker", common: "Red-breasted Sapsucker", sci: "Sphyrapicus ruber", group: "Kingfishers & Woodpeckers" },
+      { id: "downy-woodpecker", common: "Downy Woodpecker", sci: "Dryobates pubescens", group: "Kingfishers & Woodpeckers" },
+      { id: "hairy-woodpecker", common: "Hairy Woodpecker", sci: "Dryobates villosus", group: "Kingfishers & Woodpeckers" },
+      { id: "pileated-woodpecker", common: "Pileated Woodpecker", sci: "Dryocopus pileatus", group: "Kingfishers & Woodpeckers" },
+      { id: "northern-flicker", common: "Northern Flicker", sci: "Colaptes auratus", group: "Kingfishers & Woodpeckers" },
+      { id: "american-kestrel", common: "American Kestrel", sci: "Falco sparverius", group: "Raptors & Owls" },
+      { id: "merlin", common: "Merlin", sci: "Falco columbarius", group: "Raptors & Owls" },
+      { id: "peregrine-falcon", common: "Peregrine Falcon", sci: "Falco peregrinus", group: "Raptors & Owls" },
 
-        function dbGetAll(storeName) {
-            return new Promise((resolve) => {
-                if (!db) {
-                    resolve([]);
-                    return;
-                }
-                try {
-                    const tx = db.transaction(storeName, 'readonly');
-                    const store = tx.objectStore(storeName);
-                    const req = store.getAll();
-                    req.onsuccess = () => resolve(req.result || []);
-                    req.onerror = () => resolve([]);
-                } catch (e) {
-                    resolve([]);
-                }
-            });
-        }
+      // Flycatchers, Vireos & Corvids
+      { id: "western-wood-pewee", common: "Western Wood-Pewee", sci: "Contopus sordidulus", group: "Flycatchers & Vireos" },
+      { id: "willow-flycatcher", common: "Willow Flycatcher", sci: "Empidonax traillii", group: "Flycatchers & Vireos" },
+      { id: "pacific-slope-flycatcher", common: "Pacific-slope Flycatcher", sci: "Empidonax difficilis", group: "Flycatchers & Vireos" },
+      { id: "hutton-vireo", common: "Hutton's Vireo", sci: "Vireo huttoni", group: "Flycatchers & Vireos" },
+      { id: "warbling-vireo", common: "Warbling Vireo", sci: "Vireo gilvus", group: "Flycatchers & Vireos" },
+      { id: "stellers-jay", common: "Steller's Jay", sci: "Cyanocitta stelleri", group: "Corvids" },
+      { id: "california-scrub-jay", common: "California Scrub-Jay", sci: "Aphelocoma californica", group: "Corvids" },
+      { id: "american-crow", common: "American Crow", sci: "Corvus brachyrhynchos", group: "Corvids" },
+      { id: "common-raven", common: "Common Raven", sci: "Corvus corax", group: "Corvids" },
 
-        function dbPut(storeName, item) {
-            syncMirrorToLocalStorage();
-            return new Promise((resolve) => {
-                if (!db) {
-                    resolve(item);
-                    return;
-                }
-                try {
-                    const tx = db.transaction(storeName, 'readwrite');
-                    const store = tx.objectStore(storeName);
-                    const req = store.put(item);
-                    req.onsuccess = () => resolve(req.result);
-                    req.onerror = () => resolve(item);
-                } catch (e) {
-                    resolve(item);
-                }
-            });
-        }
+      // Chickadees, Swallows, Wrens & Thrushes
+      { id: "black-capped-chickadee", common: "Black-capped Chickadee", sci: "Poecile atricapillus", group: "Chickadees, Nuthatches & Wrens" },
+      { id: "chestnut-backed-chickadee", common: "Chestnut-backed Chickadee", sci: "Poecile rufescens", group: "Chickadees, Nuthatches & Wrens" },
+      { id: "tree-swallow", common: "Tree Swallow", sci: "Tachycineta bicolor", group: "Swallows" },
+      { id: "violet-green-swallow", common: "Violet-green Swallow", sci: "Tachycineta thalassina", group: "Swallows" },
+      { id: "barn-swallow", common: "Barn Swallow", sci: "Hirundo rustica", group: "Swallows" },
+      { id: "cliff-swallow", common: "Cliff Swallow", sci: "Petrochelidon pyrrhonota", group: "Swallows" },
+      { id: "bushtit", common: "Bushtit", sci: "Psaltriparus minimus", group: "Chickadees, Nuthatches & Wrens" },
+      { id: "red-breasted-nuthatch", common: "Red-breasted Nuthatch", sci: "Sitta canadensis", group: "Chickadees, Nuthatches & Wrens" },
+      { id: "brown-creeper", common: "Brown Creeper", sci: "Certhia americana", group: "Chickadees, Nuthatches & Wrens" },
+      { id: "pacific-wren", common: "Pacific Wren", sci: "Troglodytes pacificus", group: "Chickadees, Nuthatches & Wrens" },
+      { id: "marsh-wren", common: "Marsh Wren", sci: "Cistothorus palustris", group: "Chickadees, Nuthatches & Wrens" },
+      { id: "bewicks-wren", common: "Bewick's Wren", sci: "Thryomanes bewickii", group: "Chickadees, Nuthatches & Wrens" },
+      { id: "golden-crowned-kinglet", common: "Golden-crowned Kinglet", sci: "Regulus satrapa", group: "Kinglets & Thrushes" },
+      { id: "ruby-crowned-kinglet", common: "Ruby-crowned Kinglet", sci: "Corthylio calendula", group: "Kinglets & Thrushes" },
+      { id: "swainsons-thrush", common: "Swainson's Thrush", sci: "Catharus ustulatus", group: "Kinglets & Thrushes" },
+      { id: "hermit-thrush", common: "Hermit Thrush", sci: "Catharus guttatus", group: "Kinglets & Thrushes" },
+      { id: "american-robin", common: "American Robin", sci: "Turdus migratorius", group: "Kinglets & Thrushes" },
+      { id: "varied-thrush", common: "Varied Thrush", sci: "Ixoreus naevius", group: "Kinglets & Thrushes" },
+      { id: "cedar-waxwing", common: "Cedar Waxwing", sci: "Bombycilla cedrorum", group: "Kinglets & Thrushes" },
 
-        function dbClear(storeName) {
-            return new Promise((resolve) => {
-                if (!db) {
-                    resolve();
-                    return;
-                }
-                try {
-                    const tx = db.transaction(storeName, 'readwrite');
-                    const store = tx.objectStore(storeName);
-                    const req = store.clear();
-                    req.onsuccess = () => resolve();
-                    req.onerror = () => resolve();
-                } catch (e) {
-                    resolve();
-                }
-            });
-        }
+      // Warblers, Sparrows, Blackbirds & Finches
+      { id: "orange-crowned-warbler", common: "Orange-crowned Warbler", sci: "Leiothlypis celata", group: "Warblers" },
+      { id: "common-yellowthroat", common: "Common Yellowthroat", sci: "Geothlypis trichas", group: "Warblers" },
+      { id: "yellow-warbler", common: "Yellow Warbler", sci: "Setophaga petechia", group: "Warblers" },
+      { id: "yellow-rumped-warbler", common: "Yellow-rumped Warbler", sci: "Setophaga coronata", group: "Warblers" },
+      { id: "black-throated-gray-warbler", common: "Black-throated Gray Warbler", sci: "Setophaga nigrescens", group: "Warblers" },
+      { id: "wilsons-warbler", common: "Wilson's Warbler", sci: "Cardellina pusilla", group: "Warblers" },
+      { id: "spotted-towhee", common: "Spotted Towhee", sci: "Pipilo maculatus", group: "Sparrows" },
+      { id: "savannah-sparrow", common: "Savannah Sparrow", sci: "Passerculus sandwichensis", group: "Sparrows" },
+      { id: "fox-sparrow", common: "Fox Sparrow", sci: "Passerella iliaca", group: "Sparrows" },
+      { id: "song-sparrow", common: "Song Sparrow", sci: "Melospiza melodia", group: "Sparrows" },
+      { id: "lincolns-sparrow", common: "Lincoln's Sparrow", sci: "Melospiza lincolnii", group: "Sparrows" },
+      { id: "white-crowned-sparrow", common: "White-crowned Sparrow", sci: "Zonotrichia leucophrys", group: "Sparrows" },
+      { id: "golden-crowned-sparrow", common: "Golden-crowned Sparrow", sci: "Zonotrichia atricapilla", group: "Sparrows" },
+      { id: "dark-eyed-junco", common: "Dark-eyed Junco", sci: "Junco hyemalis", group: "Sparrows" },
+      { id: "western-tanager", common: "Western Tanager", sci: "Piranga ludoviciana", group: "Tanagers & Grosbeaks" },
+      { id: "black-headed-grosbeak", common: "Black-headed Grosbeak", sci: "Pheucticus melanocephalus", group: "Tanagers & Grosbeaks" },
+      { id: "red-winged-blackbird", common: "Red-winged Blackbird", sci: "Agelaius phoeniceus", group: "Blackbirds & Finches" },
+      { id: "brown-headed-cowbird", common: "Brown-headed Cowbird", sci: "Molothrus ater", group: "Blackbirds & Finches" },
+      { id: "brewers-blackbird", common: "Brewer's Blackbird", sci: "Euphagus cyanocephalus", group: "Blackbirds & Finches" },
+      { id: "house-finch", common: "House Finch", sci: "Haemorhous mexicanus", group: "Blackbirds & Finches" },
+      { id: "purple-finch", common: "Purple Finch", sci: "Haemorhous purpureus", group: "Blackbirds & Finches" },
+      { id: "pine-siskin", common: "Pine Siskin", sci: "Spinus pinus", group: "Blackbirds & Finches" },
+      { id: "american-goldfinch", common: "American Goldfinch", sci: "Spinus tristis", group: "Blackbirds & Finches" }
+    ];
 
-        /**
-         * ============================================================================
-         * 2B. OPTIONAL DYNAMIC FIREBASE V10 SDK INTEGRATION (Non-Blocking)
-         * ============================================================================
-         */
-        let fbState = {
-            connected: false,
-            app: null,
-            auth: null,
-            firestore: null,
-            storage: null,
-            uid: null,
-            fsMod: null,
-            stMod: null
+    // =========================================================================
+    // 2. APPLICATION STATE & LOCAL INDEXEDDB STORAGE
+    // =========================================================================
+    const LS_META_KEY = "cyndy_wildlife_log_meta_v2";
+    const LS_CUSTOM_KEY = "cyndy_wildlife_log_custom_v2";
+    const IDB_NAME = "CyndyWildlifeFieldLogDB";
+    const IDB_STORE = "photos";
+
+    let db = null;
+    let customSpecies = [];
+    let birdEntries = {}; // { [id]: { photoDataUrl?: string, photoUrl?: string, note?: string, updatedAt?: number } }
+    let currentView = "all"; // "all" | "photographed" | "needed"
+    let currentGroup = "ALL";
+    let searchQuery = "";
+
+    // Modal working state
+    let activeBirdId = null;
+    let pendingPhotoDataUrl = null;
+    let pendingPhotoCleared = false;
+    let deleteArmed = false;
+    let armedCardDeleteId = null;
+
+    // =========================================================================
+    // 3. INDEXEDDB HELPERS (HIGH-RES LOCAL PHOTO PERSISTENCE)
+    // =========================================================================
+    function openPhotoDB() {
+      return new Promise((resolve) => {
+        if (!window.indexedDB) return resolve(null);
+        const req = indexedDB.open(IDB_NAME, 1);
+        req.onupgradeneeded = (e) => {
+          const database = e.target.result;
+          if (!database.objectStoreNames.contains(IDB_STORE)) {
+            database.createObjectStore(IDB_STORE);
+          }
         };
-
-        function parseFirebaseConfigInput(rawText) {
-            if (!rawText || !rawText.trim()) return null;
-            let cleaned = rawText.trim();
-            // Extract object literal if user pasted `const firebaseConfig = { ... };`
-            const firstBrace = cleaned.indexOf('{');
-            const lastBrace = cleaned.lastIndexOf('}');
-            if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
-                cleaned = cleaned.slice(firstBrace, lastBrace + 1);
-            }
-            // Quote unquoted JS object keys safely for JSON.parse
-            const jsonReady = cleaned
-                .replace(/\/\/.*$/gm, '')
-                .replace(/([{,]\s*)([a-zA-Z0-9_]+)\s*:/g, '$1"$2":')
-                .replace(/'/g, '"')
-                .replace(/,\s*}/g, '}');
-            const parsed = JSON.parse(jsonReady);
-            if (!parsed.apiKey || !parsed.projectId) {
-                throw new Error('Missing apiKey or projectId in Firebase config');
-            }
-            return parsed;
-        }
-
-        function updateCloudStatusUI() {
-            const dotDesktop = document.getElementById('cloud-dot-desktop');
-            const labelDesktop = document.getElementById('cloud-label-desktop');
-            const dotMobile = document.getElementById('cloud-dot-mobile');
-            const storageDot = document.getElementById('storage-status-dot');
-            const storageText = document.getElementById('storage-status-text');
-            const pushBtn = document.getElementById('btn-push-local-cloud');
-            const discBtn = document.getElementById('btn-disconnect-firebase');
-            const sub = document.getElementById('firebase-status-sub');
-
-            if (fbState.connected) {
-                if (dotDesktop) dotDesktop.className = 'w-2 h-2 rounded-full bg-emerald-400 animate-pulse';
-                if (labelDesktop) labelDesktop.textContent = 'Firebase Synced';
-                if (dotMobile) dotMobile.className = 'w-2 h-2 rounded-full bg-emerald-400';
-                if (storageDot) storageDot.className = 'inline-block w-2 h-2 rounded-full bg-emerald-400';
-                if (storageText) storageText.textContent = 'Firebase Cloud + Local IndexedDB Synced';
-                if (pushBtn) pushBtn.classList.remove('hidden');
-                if (discBtn) discBtn.classList.remove('hidden');
-                if (sub) sub.textContent = `Connected to project: ${fbState.app?.options?.projectId || 'Cloud'}`;
-            } else {
-                if (dotDesktop) dotDesktop.className = 'w-2 h-2 rounded-full bg-slate-400';
-                if (labelDesktop) labelDesktop.textContent = 'Local Only';
-                if (dotMobile) dotMobile.className = 'w-2 h-2 rounded-full bg-slate-400';
-                if (storageDot) storageDot.className = 'inline-block w-2 h-2 rounded-full bg-emerald-400';
-                if (storageText) storageText.textContent = 'IndexedDB Local High-Res Storage Active';
-                if (pushBtn) pushBtn.classList.add('hidden');
-                if (discBtn) discBtn.classList.add('hidden');
-                if (sub) sub.textContent = 'Sync photos & field notes across desktop and mobile';
-            }
-        }
-
-        async function initFirebaseFromSavedConfig(silent = true) {
-            const savedRaw = localStorage.getItem(LS_FIREBASE_CFG_KEY);
-            if (!savedRaw) return false;
-
-            try {
-                const config = JSON.parse(savedRaw);
-                const [appMod, authMod, fsMod, stMod] = await Promise.all([
-                    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js'),
-                    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js'),
-                    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js'),
-                    import('https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js')
-                ]);
-
-                const existingApps = appMod.getApps();
-                const app = existingApps.length ? existingApps[0] : appMod.initializeApp(config);
-                const auth = authMod.getAuth(app);
-                const cred = await authMod.signInAnonymously(auth);
-                const firestore = fsMod.getFirestore(app);
-                const storage = stMod.getStorage(app);
-
-                fbState = {
-                    connected: true,
-                    app,
-                    auth,
-                    firestore,
-                    storage,
-                    uid: cred.user.uid,
-                    fsMod,
-                    stMod
-                };
-
-                updateCloudStatusUI();
-                await pullCloudRecordsIntoLocal();
-                if (!silent) showToast('Connected to Firebase Cloud');
-                return true;
-            } catch (err) {
-                console.warn('Firebase connection notice:', err);
-                fbState.connected = false;
-                updateCloudStatusUI();
-                if (!silent) showToast(`Firebase error: ${err.message}`, true);
-                return false;
-            }
-        }
-
-        async function pullCloudRecordsIntoLocal() {
-            if (!fbState.connected) return;
-            try {
-                const { collection, getDocs } = fbState.fsMod;
-                const snap = await getDocs(collection(fbState.firestore, 'wildlifeFieldLog_records'));
-                let updatedAny = false;
-                snap.forEach(docSnap => {
-                    const cloudRec = docSnap.data();
-                    const localRec = recordsMap[cloudRec.id];
-                    if (!localRec || (cloudRec.updatedAt || '') > (localRec.updatedAt || '')) {
-                        recordsMap[cloudRec.id] = {
-                            ...(localRec || {}),
-                            ...cloudRec
-                        };
-                        dbPut(STORE_RECORDS, recordsMap[cloudRec.id]);
-                        updatedAny = true;
-                    }
-                });
-
-                const customSnap = await getDocs(collection(fbState.firestore, 'wildlifeFieldLog_customSpecies'));
-                customSnap.forEach(docSnap => {
-                    const cb = docSnap.data();
-                    if (!allSpecies.some(s => s.id === cb.id)) {
-                        const newSpecies = { ...cb, isCustom: true };
-                        allSpecies.push(newSpecies);
-                        dbPut(STORE_CUSTOM, newSpecies);
-                        updatedAny = true;
-                    }
-                });
-
-                if (updatedAny) {
-                    populateFamilyDropdowns();
-                    renderApp();
-                }
-            } catch (err) {
-                console.warn('Cloud pull skipped:', err);
-            }
-        }
-
-        async function syncRecordToCloud(birdId, recordObj, dataUrlForUpload = null) {
-            if (!fbState.connected) return recordObj;
-            try {
-                const { doc, setDoc } = fbState.fsMod;
-                const { ref, uploadString, getDownloadURL } = fbState.stMod;
-                let finalPhotoUrl = recordObj.photoUrl || '';
-                let cloudStoragePath = recordObj.cloudStoragePath || '';
-
-                if (dataUrlForUpload && dataUrlForUpload.startsWith('data:image/')) {
-                    cloudStoragePath = `wildlife-field-log/${birdId}.jpg`;
-                    const storageRef = ref(fbState.storage, cloudStoragePath);
-                    await uploadString(storageRef, dataUrlForUpload, 'data_url');
-                    finalPhotoUrl = await getDownloadURL(storageRef);
-                }
-
-                const cloudPayload = {
-                    id: birdId,
-                    note: recordObj.note || '',
-                    photoUrl: finalPhotoUrl,
-                    cloudStoragePath,
-                    updatedAt: recordObj.updatedAt || new Date().toISOString()
-                };
-
-                await setDoc(doc(fbState.firestore, 'wildlifeFieldLog_records', birdId), cloudPayload, { merge: true });
-                return {
-                    ...recordObj,
-                    photoUrl: finalPhotoUrl,
-                    cloudStoragePath
-                };
-            } catch (err) {
-                console.warn('Cloud sync warning (saved locally):', err);
-                showToast('Saved locally (Cloud sync warning: check rules)', true);
-                return recordObj;
-            }
-        }
-
-        async function deleteCloudPhoto(birdId, cloudStoragePath) {
-            if (!fbState.connected) return;
-            try {
-                const { ref, deleteObject } = fbState.stMod;
-                const pathToDelete = cloudStoragePath || `wildlife-field-log/${birdId}.jpg`;
-                await deleteObject(ref(fbState.storage, pathToDelete));
-            } catch (err) {
-                // Ignore object-not-found if photo was URL-only or already removed
-            }
-        }
-
-        function openFirebaseModal() {
-            const savedRaw = localStorage.getItem(LS_FIREBASE_CFG_KEY);
-            if (savedRaw) {
-                document.getElementById('firebase-config-input').value = savedRaw;
-            }
-            updateCloudStatusUI();
-            document.getElementById('firebase-modal').classList.remove('hidden');
-        }
-
-        function closeFirebaseModal() {
-            document.getElementById('firebase-modal').classList.add('hidden');
-        }
-
-        async function saveAndConnectFirebase() {
-            const raw = document.getElementById('firebase-config-input').value;
-            try {
-                const parsed = parseFirebaseConfigInput(raw);
-                if (!parsed) {
-                    showToast('Paste your Firebase config first', true);
-                    return;
-                }
-                localStorage.setItem(LS_FIREBASE_CFG_KEY, JSON.stringify(parsed, null, 2));
-                showToast('Connecting to Firebase...');
-                await initFirebaseFromSavedConfig(false);
-            } catch (err) {
-                showToast(`Invalid Firebase config: ${err.message}`, true);
-            }
-        }
-
-        function disconnectFirebase() {
-            localStorage.removeItem(LS_FIREBASE_CFG_KEY);
-            fbState.connected = false;
-            updateCloudStatusUI();
-            showToast('Disconnected from Firebase (Local Mode active)');
-        }
-
-        async function pushLocalArchiveToFirebase() {
-            if (!fbState.connected) return;
-            showToast('Syncing local archive to Firebase...');
-            let count = 0;
-            for (const bird of allSpecies) {
-                if (bird.isCustom) {
-                    const { doc, setDoc } = fbState.fsMod;
-                    await setDoc(doc(fbState.firestore, 'wildlifeFieldLog_customSpecies', bird.id), bird, { merge: true });
-                }
-                const rec = recordsMap[bird.id];
-                if (rec && (rec.photoDataUrl || rec.photoUrl || rec.note)) {
-                    const synced = await syncRecordToCloud(bird.id, rec, rec.photoDataUrl || null);
-                    recordsMap[bird.id] = synced;
-                    await dbPut(STORE_RECORDS, synced);
-                    count++;
-                }
-            }
-            renderApp();
-            showToast(`Pushed ${count} species records to Firebase`);
-        }
-
-        /**
-         * ============================================================================
-         * 3. APPLICATION STATE & INITIALIZATION
-         * ============================================================================
-         */
-        let allSpecies = []; // Merged baseline + custom species
-        let recordsMap = {}; // id -> { id, note, photoDataUrl, photoUrl, cloudStoragePath, updatedAt }
-        let currentTab = 'all'; // 'all' | 'photographed' | 'needed'
-        let searchQuery = '';
-        let selectedFamily = 'ALL';
-        let activeModalBirdId = null;
-        let modalDraftState = {
-            photoDataUrl: '',
-            photoUrl: '',
-            hasPendingNewFile: false,
-            deleteConfirmArmed: false
+        req.onsuccess = (e) => {
+          db = e.target.result;
+          resolve(db);
         };
-        let resetConfirmPending = false;
+        req.onerror = () => resolve(null);
+      });
+    }
 
-        async function bootstrapApp() {
-            try {
-                await initDB();
-            } catch (err) {
-                console.warn('IndexedDB unavailable, falling back to localStorage/memory:', err);
-            }
-            await loadDataFromStorage();
-            populateFamilyDropdowns();
-            renderApp();
-            // Dynamically connect Firebase in background if configured (never blocks UI)
-            initFirebaseFromSavedConfig(true);
+    function idbPutPhoto(birdId, dataUrl) {
+      return new Promise((resolve) => {
+        if (!db) return resolve(false);
+        try {
+          const tx = db.transaction(IDB_STORE, "readwrite");
+          tx.objectStore(IDB_STORE).put(dataUrl, birdId);
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => resolve(false);
+        } catch (_) {
+          resolve(false);
         }
+      });
+    }
 
-        async function loadDataFromStorage() {
-            const [dbRecords, dbCustomBirds] = await Promise.all([
-                dbGetAll(STORE_RECORDS),
-                dbGetAll(STORE_CUSTOM)
-            ]);
-
-            recordsMap = {};
-
-            // Hydrate from localStorage backup first, then overlay IndexedDB (which has full DataURLs)
-            try {
-                const lsRecs = JSON.parse(localStorage.getItem(LS_RECORDS_BACKUP_KEY) || '{}');
-                Object.keys(lsRecs).forEach(id => {
-                    recordsMap[id] = lsRecs[id];
-                });
-            } catch (e) {}
-
-            dbRecords.forEach(rec => {
-                recordsMap[rec.id] = {
-                    ...(recordsMap[rec.id] || {}),
-                    ...rec
-                };
-            });
-
-            let mergedCustom = [...dbCustomBirds];
-            if (mergedCustom.length === 0) {
-                try {
-                    const lsCustom = JSON.parse(localStorage.getItem(LS_CUSTOM_BACKUP_KEY) || '[]');
-                    if (Array.isArray(lsCustom)) mergedCustom = lsCustom;
-                } catch (e) {}
-            }
-
-            allSpecies = [
-                ...NISQUALLY_BASELINE_BIRDS.map(b => ({ ...b, isCustom: false })),
-                ...mergedCustom.map(b => ({ ...b, isCustom: true }))
-            ];
+    function idbDeletePhoto(birdId) {
+      return new Promise((resolve) => {
+        if (!db) return resolve(false);
+        try {
+          const tx = db.transaction(IDB_STORE, "readwrite");
+          tx.objectStore(IDB_STORE).delete(birdId);
+          tx.oncomplete = () => resolve(true);
+          tx.onerror = () => resolve(false);
+        } catch (_) {
+          resolve(false);
         }
-<!-- ... existing code ... -->
-        // Photo Modal Operations & Client-Side 2048px JPEG Compression
-        function compressImageFile(file, maxEdge = 2048, quality = 0.85) {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onerror = () => reject(new Error('Failed to read image file'));
-                reader.onload = (e) => {
-                    const rawDataUrl = e.target.result;
-                    const img = new Image();
-                    img.onerror = () => resolve(rawDataUrl); // Fallback to raw DataURL if browser can't decode into canvas
-                    img.onload = () => {
-                        try {
-                            let { width, height } = img;
-                            if (width > maxEdge || height > maxEdge) {
-                                if (width >= height) {
-                                    height = Math.round((height * maxEdge) / width);
-                                    width = maxEdge;
-                                } else {
-                                    width = Math.round((width * maxEdge) / height);
-                                    height = maxEdge;
-                                }
-                            }
-                            const canvas = document.createElement('canvas');
-                            canvas.width = width;
-                            canvas.height = height;
-                            const ctx = canvas.getContext('2d');
-                            ctx.drawImage(img, 0, 0, width, height);
-                            const compressed = canvas.toDataURL('image/jpeg', quality);
-                            resolve(compressed);
-                        } catch (canvasErr) {
-                            resolve(rawDataUrl);
-                        }
-                    };
-                    img.src = rawDataUrl;
-                };
-                reader.readAsDataURL(file);
-            });
-        }
+      });
+    }
 
-        function populateReassignDropdown(excludeBirdId) {
-            const select = document.getElementById('reassign-species-select');
-            select.innerHTML = '<option value="">-- Select target species --</option>';
-
-            const families = [...new Set(allSpecies.map(b => b.family))];
-            families.forEach(fam => {
-                const groupBirds = allSpecies.filter(b => b.family === fam && b.id !== excludeBirdId);
-                if (groupBirds.length === 0) return;
-
-                const optgroup = document.createElement('optgroup');
-                optgroup.label = fam;
-                groupBirds.forEach(b => {
-                    const opt = document.createElement('option');
-                    opt.value = b.id;
-                    const alreadyHas = hasPhoto(b.id) ? ' (has photo)' : '';
-                    opt.textContent = `${b.common}${alreadyHas}`;
-                    optgroup.appendChild(opt);
-                });
-                select.appendChild(optgroup);
-            });
-        }
-
-        function resetDeleteButtonState() {
-            modalDraftState.deleteConfirmArmed = false;
-            const btn = document.getElementById('remove-photo-btn');
-            const label = document.getElementById('remove-photo-btn-text');
-            if (btn && label) {
-                btn.className = 'inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-rose-300 bg-rose-950/60 hover:bg-rose-900/80 border border-rose-800/70 transition';
-                label.textContent = 'Delete Photo';
-            }
-        }
-
-        function refreshModalPreviewFromDraft() {
-            const activeSrc = modalDraftState.photoDataUrl || modalDraftState.photoUrl || '';
-            const previewWrap = document.getElementById('photo-modal-preview-wrap');
-            const previewImg = document.getElementById('photo-modal-preview-img');
-            const pendingBadge = document.getElementById('photo-pending-badge');
-            const removeBtn = document.getElementById('remove-photo-btn');
-            const reassignWrap = document.getElementById('reassign-species-wrap');
-
-            resetDeleteButtonState();
-
-            if (activeSrc) {
-                previewImg.src = activeSrc;
-                previewWrap.classList.remove('hidden');
-                removeBtn.classList.remove('hidden');
-                reassignWrap.classList.remove('hidden');
-                if (activeModalBirdId) populateReassignDropdown(activeModalBirdId);
-
-                if (modalDraftState.hasPendingNewFile) {
-                    pendingBadge.classList.remove('hidden');
-                } else {
-                    pendingBadge.classList.add('hidden');
-                }
+    function idbGetAllPhotos() {
+      return new Promise((resolve) => {
+        if (!db) return resolve({});
+        try {
+          const tx = db.transaction(IDB_STORE, "readonly");
+          const store = tx.objectStore(IDB_STORE);
+          const result = {};
+          const cursorReq = store.openCursor();
+          cursorReq.onsuccess = (e) => {
+            const cursor = e.target.result;
+            if (cursor) {
+              result[cursor.key] = cursor.value;
+              cursor.continue();
             } else {
-                previewImg.src = '';
-                previewWrap.classList.add('hidden');
-                pendingBadge.classList.add('hidden');
-                removeBtn.classList.add('hidden');
-                reassignWrap.classList.add('hidden');
+              resolve(result);
             }
+          };
+          cursorReq.onerror = () => resolve({});
+        } catch (_) {
+          resolve({});
         }
+      });
+    }
 
-        function openPhotoModal(birdId) {
-            activeModalBirdId = birdId;
-            const bird = allSpecies.find(b => b.id === birdId);
-            if (!bird) return;
-            const rec = recordsMap[birdId] || {};
+    function persistLocalMetadata() {
+      const lightMeta = {};
+      Object.keys(birdEntries).forEach((id) => {
+        const entry = birdEntries[id];
+        if (!entry) return;
+        lightMeta[id] = {
+          photoUrl: entry.photoUrl || "",
+          note: entry.note || "",
+          updatedAt: entry.updatedAt || Date.now()
+        };
+      });
+      try {
+        localStorage.setItem(LS_META_KEY, JSON.stringify(lightMeta));
+        localStorage.setItem(LS_CUSTOM_KEY, JSON.stringify(customSpecies));
+      } catch (err) {
+        console.warn("LocalStorage metadata save warning:", err);
+      }
+    }
 
-            modalDraftState = {
-                photoDataUrl: rec.photoDataUrl || '',
-                photoUrl: rec.photoUrl || '',
-                hasPendingNewFile: false,
-                deleteConfirmArmed: false
-            };
+    // =========================================================================
+    // 4. HELPERS & RENDERING
+    // =========================================================================
+    function getAllSpecies() {
+      return [...BASELINE_BIRDS, ...customSpecies];
+    }
 
-            document.getElementById('photo-modal-title').textContent = bird.common;
-            document.getElementById('photo-modal-subtitle').textContent = `${bird.scientific} • ${bird.family}`;
-            document.getElementById('photo-modal-note').value = rec.note || '';
-            document.getElementById('photo-url-input').value = rec.photoUrl || '';
+    function getBirdImageSrc(birdId) {
+      const entry = birdEntries[birdId];
+      if (!entry) return "";
+      return entry.photoDataUrl || entry.photoUrl || "";
+    }
 
-            refreshModalPreviewFromDraft();
-            document.getElementById('photo-modal').classList.remove('hidden');
+    function showToast(msg) {
+      const toast = document.getElementById("toast");
+      document.getElementById("toast-msg").textContent = msg;
+      toast.classList.remove("hidden");
+      toast.classList.add("flex");
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => {
+        toast.classList.add("hidden");
+        toast.classList.remove("flex");
+      }, 2600);
+    }
+
+    function populateGroupFilter() {
+      const select = document.getElementById("group-filter");
+      const groups = [...new Set(getAllSpecies().map((b) => b.group))];
+      select.innerHTML = '<option value="ALL">All Taxonomic Groups</option>';
+      groups.forEach((g) => {
+        const opt = document.createElement("option");
+        opt.value = g;
+        opt.textContent = g;
+        select.appendChild(opt);
+      });
+    }
+
+    function renderChecklist() {
+      const allBirds = getAllSpecies();
+      let photographedCount = 0;
+
+      allBirds.forEach((b) => {
+        if (getBirdImageSrc(b.id)) photographedCount++;
+      });
+
+      const neededCount = allBirds.length - photographedCount;
+      const pct = allBirds.length ? Math.round((photographedCount / allBirds.length) * 100) : 0;
+
+      document.getElementById("count-all").textContent = allBirds.length;
+      document.getElementById("count-photographed").textContent = photographedCount;
+      document.getElementById("count-needed").textContent = neededCount;
+      document.getElementById("progress-bar").style.width = `${pct}%`;
+      document.getElementById("progress-label").textContent = `${photographedCount}/${allBirds.length} (${pct}%)`;
+
+      const q = searchQuery.trim().toLowerCase();
+      const filtered = allBirds.filter((bird) => {
+        const imgSrc = getBirdImageSrc(bird.id);
+        const note = (birdEntries[bird.id]?.note || "").toLowerCase();
+
+        if (currentView === "photographed" && !imgSrc) return false;
+        if (currentView === "needed" && imgSrc) return false;
+        if (currentGroup !== "ALL" && bird.group !== currentGroup) return false;
+
+        if (q) {
+          const matchCommon = bird.common.toLowerCase().includes(q);
+          const matchSci = bird.sci.toLowerCase().includes(q);
+          const matchGroup = bird.group.toLowerCase().includes(q);
+          const matchNote = note.includes(q);
+          if (!matchCommon && !matchSci && !matchGroup && !matchNote) return false;
         }
+        return true;
+      });
 
-        function closePhotoModal() {
-            document.getElementById('photo-modal').classList.add('hidden');
-            activeModalBirdId = null;
-            modalDraftState = {
-                photoDataUrl: '',
-                photoUrl: '',
-                hasPendingNewFile: false,
-                deleteConfirmArmed: false
-            };
-        }
+      const grid = document.getElementById("bird-grid");
+      const emptyState = document.getElementById("empty-state");
 
-        function triggerLocalFileUpload() {
-            const input = document.getElementById('hidden-photo-input');
-            if (input) {
-                input.value = '';
-                input.click();
-            }
-        }
+      if (filtered.length === 0) {
+        grid.innerHTML = "";
+        emptyState.classList.remove("hidden");
+        return;
+      }
 
-        async function handleFileSelected(event) {
-            const file = event.target.files && event.target.files[0];
-            if (!file || !activeModalBirdId) return;
+      emptyState.classList.add("hidden");
+      grid.innerHTML = filtered.map((bird) => {
+        const imgSrc = getBirdImageSrc(bird.id);
+        const note = birdEntries[bird.id]?.note || "";
+        const hasPhoto = Boolean(imgSrc);
+        const isDeleteArmed = armedCardDeleteId === bird.id;
 
-            try {
-                showToast('Optimizing photo for field archive...');
-                const compressedDataUrl = await compressImageFile(file, 2048, 0.85);
+        return `
+          <article class="group bg-[#16221c] border ${hasPhoto ? "border-emerald-500/35" : "border-[#2b4035]"} rounded-2xl overflow-hidden flex flex-col shadow-sm hover:border-emerald-400/60 transition">
+            <!-- Photo Frame -->
+            <div class="relative aspect-[4/3] bg-[#0f1713] overflow-hidden">
+              ${
+                hasPhoto
+                  ? `<img src="${imgSrc}" alt="${bird.common}" loading="lazy" data-lightbox-id="${bird.id}" class="w-full h-full object-cover cursor-zoom-in group-hover:scale-[1.02] transition duration-300" />`
+                  : `<button type="button" data-edit-id="${bird.id}" class="w-full h-full flex flex-col items-center justify-center text-[#9cb3a7]/60 hover:text-emerald-300 hover:bg-[#1a2921] transition p-4">
+                      <svg class="w-8 h-8 mb-1.5 opacity-70" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 11v6m-3-3h6"/>
+                      </svg>
+                      <span class="text-[11px] font-medium">Add Field Photo</span>
+                    </button>`
+              }
 
-                modalDraftState.photoDataUrl = compressedDataUrl;
-                modalDraftState.photoUrl = '';
-                modalDraftState.hasPendingNewFile = true;
-
-                // Auto-fill today's date & Nisqually default in modal note if blank
-                const noteInput = document.getElementById('photo-modal-note');
-                if (!noteInput.value.trim()) {
-                    const todayStr = new Date().toISOString().split('T')[0];
-                    noteInput.value = `${todayStr} • Billy Frank Jr. Nisqually NWR`;
+              <!-- Top Badges -->
+              <div class="absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none">
+                <span class="px-2 py-0.5 rounded-md bg-black/70 backdrop-blur-sm text-[10px] font-medium text-slate-200 border border-white/10">
+                  ${bird.group}
+                </span>
+                ${
+                  hasPhoto
+                    ? `<span class="px-2 py-0.5 rounded-md bg-emerald-500/90 text-slate-950 text-[10px] font-bold shadow">Logged</span>`
+                    : `<span class="px-2 py-0.5 rounded-md bg-black/70 text-amber-300/90 text-[10px] font-medium border border-amber-400/20">Needed</span>`
                 }
+              </div>
 
-                document.getElementById('photo-url-input').value = '';
-                refreshModalPreviewFromDraft();
-                showToast('Photo ready — tap Save & Done');
-            } catch (err) {
-                console.error('File read/compress error:', err);
-                showToast('Could not read selected image file', true);
-            } finally {
-                event.target.value = '';
-            }
-        }
-
-        function previewUrlInput(val) {
-            const trimmed = val.trim();
-            if (!trimmed) return;
-            modalDraftState.photoUrl = trimmed;
-            modalDraftState.photoDataUrl = '';
-            modalDraftState.hasPendingNewFile = true;
-        }
-
-        function applyPhotoUrlToPreview() {
-            if (!activeModalBirdId) return;
-            const urlVal = document.getElementById('photo-url-input').value.trim();
-            if (!urlVal) {
-                showToast('Please enter an image URL first', true);
-                return;
-            }
-
-            modalDraftState.photoUrl = urlVal;
-            modalDraftState.photoDataUrl = '';
-            modalDraftState.hasPendingNewFile = true;
-
-            const noteInput = document.getElementById('photo-modal-note');
-            if (!noteInput.value.trim()) {
-                const todayStr = new Date().toISOString().split('T')[0];
-                noteInput.value = `${todayStr} • Billy Frank Jr. Nisqually NWR`;
-            }
-
-            refreshModalPreviewFromDraft();
-            showToast('URL loaded — tap Save & Done');
-        }
-
-        async function handleDeletePhotoClick() {
-            if (!activeModalBirdId) return;
-
-            // Two-tap inline confirmation (never uses window.confirm which fails in sandboxed iframes)
-            if (!modalDraftState.deleteConfirmArmed) {
-                modalDraftState.deleteConfirmArmed = true;
-                const btn = document.getElementById('remove-photo-btn');
-                const label = document.getElementById('remove-photo-btn-text');
-                btn.className = 'inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold text-white bg-rose-600 hover:bg-rose-500 border border-rose-400 transition shadow';
-                label.textContent = 'Confirm Delete?';
-                return;
-            }
-
-            const birdId = activeModalBirdId;
-            const existing = recordsMap[birdId] || { id: birdId };
-            const oldCloudPath = existing.cloudStoragePath || '';
-
-            const updated = {
-                ...existing,
-                id: birdId,
-                photoDataUrl: '',
-                photoUrl: '',
-                cloudStoragePath: '',
-                updatedAt: new Date().toISOString()
-            };
-
-            recordsMap[birdId] = updated;
-            await dbPut(STORE_RECORDS, updated);
-
-            if (fbState.connected) {
-                await deleteCloudPhoto(birdId, oldCloudPath);
-                await syncRecordToCloud(birdId, updated, null);
-            }
-
-            modalDraftState.photoDataUrl = '';
-            modalDraftState.photoUrl = '';
-            modalDraftState.hasPendingNewFile = false;
-            document.getElementById('photo-url-input').value = '';
-
-            renderApp();
-            closePhotoModal();
-            showToast('Photo deleted — bird moved to Needed list');
-        }
-
-        async function reassignPhotoToSpecies() {
-            if (!activeModalBirdId) return;
-            const targetId = document.getElementById('reassign-species-select').value;
-            if (!targetId) {
-                showToast('Select a target bird species first', true);
-                return;
-            }
-
-            // Use either the unsaved draft photo or the existing saved photo
-            const activeDataUrl = modalDraftState.photoDataUrl;
-            const activePhotoUrl = modalDraftState.photoUrl;
-            if (!activeDataUrl && !activePhotoUrl) {
-                showToast('No photo to move', true);
-                return;
-            }
-
-            const sourceBirdId = activeModalBirdId;
-            const sourceRec = recordsMap[sourceBirdId] || { id: sourceBirdId };
-            const targetBird = allSpecies.find(b => b.id === targetId);
-            const targetExisting = recordsMap[targetId] || { id: targetId };
-            const currentModalNote = document.getElementById('photo-modal-note').value.trim();
-
-            let updatedTarget = {
-                ...targetExisting,
-                id: targetId,
-                photoDataUrl: activeDataUrl || '',
-                photoUrl: activePhotoUrl || '',
-                note: targetExisting.note ? targetExisting.note : currentModalNote,
-                updatedAt: new Date().toISOString()
-            };
-
-            const clearedSource = {
-                ...sourceRec,
-                id: sourceBirdId,
-                photoDataUrl: '',
-                photoUrl: '',
-                cloudStoragePath: '',
-                updatedAt: new Date().toISOString()
-            };
-
-            recordsMap[targetId] = updatedTarget;
-            recordsMap[sourceBirdId] = clearedSource;
-
-            await Promise.all([
-                dbPut(STORE_RECORDS, updatedTarget),
-                dbPut(STORE_RECORDS, clearedSource)
-            ]);
-
-            if (fbState.connected) {
-                await deleteCloudPhoto(sourceBirdId, sourceRec.cloudStoragePath);
-                await syncRecordToCloud(sourceBirdId, clearedSource, null);
-                updatedTarget = await syncRecordToCloud(targetId, updatedTarget, activeDataUrl || null);
-                recordsMap[targetId] = updatedTarget;
-                await dbPut(STORE_RECORDS, updatedTarget);
-            }
-
-            renderApp();
-            closePhotoModal();
-            showToast(`Moved photo to ${targetBird ? targetBird.common : 'new species'}`);
-        }
-
-        async function saveModalChangesAndClose() {
-            if (!activeModalBirdId) {
-                closePhotoModal();
-                return;
-            }
-
-            const saveBtn = document.getElementById('save-done-btn');
-            const saveText = document.getElementById('save-done-text');
-            if (saveBtn) saveBtn.disabled = true;
-            if (saveText) saveText.textContent = 'Saving...';
-
-            try {
-                const birdId = activeModalBirdId;
-                const existing = recordsMap[birdId] || { id: birdId };
-                const noteVal = document.getElementById('photo-modal-note').value.trim();
-
-                // Check if user typed a URL directly into the URL box without clicking "Load URL"
-                const typedUrl = document.getElementById('photo-url-input').value.trim();
-                let finalDataUrl = modalDraftState.photoDataUrl || '';
-                let finalPhotoUrl = modalDraftState.photoUrl || '';
-
-                if (typedUrl && typedUrl !== (existing.photoUrl || '')) {
-                    finalPhotoUrl = typedUrl;
-                    finalDataUrl = '';
+              <!-- Card Action Buttons: Explicit Edit & Delete -->
+              <div class="absolute bottom-2 right-2 flex items-center gap-1.5">
+                <button type="button" data-edit-id="${bird.id}" class="px-2.5 py-1 rounded-lg bg-black/80 hover:bg-emerald-500 text-white hover:text-slate-950 text-[11px] font-semibold border border-white/15 backdrop-blur-sm transition shadow">
+                  ${hasPhoto ? "Edit" : "Upload / Edit"}
+                </button>
+                ${
+                  hasPhoto || note
+                    ? `<button type="button" data-card-delete-id="${bird.id}" class="px-2.5 py-1 rounded-lg ${isDeleteArmed ? "bg-rose-600 text-white border-rose-400" : "bg-black/80 hover:bg-rose-600 text-rose-200 hover:text-white border-rose-500/40"} text-[11px] font-semibold border backdrop-blur-sm transition shadow">
+                        ${isDeleteArmed ? "Confirm?" : "Delete"}
+                      </button>`
+                    : ""
                 }
+              </div>
+            </div>
 
-                let updated = {
-                    ...existing,
-                    id: birdId,
-                    note: noteVal,
-                    photoDataUrl: finalDataUrl,
-                    photoUrl: finalPhotoUrl,
-                    updatedAt: new Date().toISOString()
-                };
+            <!-- Card Body -->
+            <div class="p-3.5 flex-1 flex flex-col justify-between gap-2.5">
+              <div>
+                <h3 class="text-sm font-bold text-white leading-snug">${bird.common}</h3>
+                <p class="text-[11px] italic text-[#9cb3a7]">${bird.sci}</p>
+              </div>
 
-                // 1. Always save locally first so there is zero chance of data loss
-                recordsMap[birdId] = updated;
-                await dbPut(STORE_RECORDS, updated);
+              <!-- Inline Note Line (Date Taken / Location) -->
+              <div class="pt-2 border-t border-[#2b4035]/70">
+                <input
+                  type="text"
+                  data-inline-note-id="${bird.id}"
+                  value="${note.replace(/"/g, "&quot;")}"
+                  placeholder="Date taken / location note..."
+                  class="w-full px-2.5 py-1.5 rounded-lg bg-[#0f1713] border border-[#2b4035]/80 text-[11px] text-slate-200 placeholder-[#9cb3a7]/50 focus:outline-none focus:border-emerald-400 transition"
+                />
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
 
-                // 2. Sync to Firebase Storage + Firestore if connected
-                if (fbState.connected) {
-                    const uploadBlob = modalDraftState.hasPendingNewFile && finalDataUrl ? finalDataUrl : null;
-                    updated = await syncRecordToCloud(birdId, updated, uploadBlob);
-                    recordsMap[birdId] = updated;
-                    await dbPut(STORE_RECORDS, updated);
-                }
+    // =========================================================================
+    // 5. ULTRA-COMPACT EDIT / UPLOAD / SPECIES REASSIGN / DELETE MODAL LOGIC
+    // =========================================================================
+    function openEditModal(birdId) {
+      const bird = getAllSpecies().find((b) => b.id === birdId);
+      if (!bird) return;
 
-                renderApp();
-                closePhotoModal();
-                showToast(finalDataUrl || finalPhotoUrl ? 'Photo & field note saved!' : 'Field note saved!');
-            } catch (err) {
-                console.error('Error saving modal changes:', err);
-                showToast('Saved locally (check console for details)', true);
-                renderApp();
-                closePhotoModal();
-            } finally {
-                if (saveBtn) saveBtn.disabled = false;
-                if (saveText) saveText.textContent = 'Save & Done';
-            }
-        }
-<!-- ... existing code ... -->
-                    await loadDataFromStorage();
-                    populateFamilyDropdowns();
-                    renderApp();
-                    closeDataModal();
-                    showToast('Checklist restored from JSON backup');
-                } catch (err) {
-                    console.error(err);
-                    showToast('Failed to parse backup JSON file', true);
-                }
-            };
-            reader.readAsText(file);
-            event.target.value = '';
-        }
+      activeBirdId = birdId;
+      pendingPhotoDataUrl = null;
+      pendingPhotoCleared = false;
+      deleteArmed = false;
 
-        async function handleFactoryReset() {
-            const btn = document.getElementById('reset-confirm-btn');
-            if (!resetConfirmPending) {
-                resetConfirmPending = true;
-                btn.textContent = 'Click Again to Confirm';
-                return;
-            }
+      const entry = birdEntries[birdId] || {};
+      const currentImg = getBirdImageSrc(birdId);
 
-            await dbClear(STORE_RECORDS);
-            await dbClear(STORE_CUSTOM);
-            localStorage.removeItem(LS_RECORDS_BACKUP_KEY);
-            localStorage.removeItem(LS_CUSTOM_BACKUP_KEY);
-            recordsMap = {};
-            allSpecies = [...NISQUALLY_BASELINE_BIRDS];
-            populateFamilyDropdowns();
-            resetFilters();
-            closeDataModal();
-            showToast('Checklist reset to Nisqually NWR default');
-        }
+      document.getElementById("modal-bird-name").textContent = bird.common;
+      document.getElementById("modal-bird-sci").textContent = `${bird.sci} • ${bird.group}`;
+      document.getElementById("modal-url-input").value = entry.photoUrl && !entry.photoUrl.startsWith("data:") ? entry.photoUrl : "";
+      document.getElementById("modal-note-input").value = entry.note || "";
 
-        /**
-         * ============================================================================
-         * 7. UTILITIES & KEYBOARD SHORTCUTS
-         * ============================================================================
-         */
-        let toastTimeout = null;
-        function showToast(msg, isWarning = false) {
-            const toast = document.getElementById('toast');
-            const dot = document.getElementById('toast-dot');
-            const text = document.getElementById('toast-message');
+      const deleteBtn = document.getElementById("btn-delete-photo");
+      deleteBtn.textContent = "Delete";
+      deleteBtn.className = "px-2.5 py-1.5 rounded-lg bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-200 text-xs font-semibold transition";
+      deleteBtn.classList.toggle("hidden", !currentImg && !entry.note);
 
-            text.textContent = msg;
-            dot.className = isWarning
-                ? 'w-2 h-2 rounded-full bg-amber-400'
-                : 'w-2 h-2 rounded-full bg-emerald-400';
-
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 2600);
-        }
-
-        function escapeHTML(str) {
-            if (!str) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#039;');
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                closePhotoModal();
-                closeAddSpeciesModal();
-                closeDataModal();
-                closeFirebaseModal();
-                document.getElementById('lightbox-modal').classList.add('hidden');
-            }
+      // Populate Species Selector dropdown with ALL species (pre-selecting current bird)
+      const speciesSelect = document.getElementById("modal-species-select");
+      speciesSelect.innerHTML = "";
+      const groups = {};
+      getAllSpecies().forEach((b) => {
+        if (!groups[b.group]) groups[b.group] = [];
+        groups[b.group].push(b);
+      });
+      Object.keys(groups).forEach((grp) => {
+        const optgroup = document.createElement("optgroup");
+        optgroup.label = grp;
+        groups[grp].forEach((b) => {
+          const opt = document.createElement("option");
+          opt.value = b.id;
+          opt.textContent = b.common;
+          if (b.id === birdId) opt.selected = true;
+          optgroup.appendChild(opt);
         });
+        speciesSelect.appendChild(optgroup);
+      });
 
-        // Start application cleanly whether DOMContentLoaded has already fired or not
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', bootstrapApp);
-        } else {
-            bootstrapApp();
+      updateModalPreview(currentImg);
+
+      const modal = document.getElementById("edit-modal");
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+    }
+
+    function updateModalPreview(src) {
+      const imgEl = document.getElementById("modal-preview-img");
+      const phEl = document.getElementById("modal-preview-placeholder");
+      const chooseLabel = document.getElementById("btn-choose-file-label");
+      if (src) {
+        imgEl.src = src;
+        imgEl.classList.remove("hidden");
+        phEl.classList.add("hidden");
+        if (chooseLabel) chooseLabel.textContent = "Replace Photo";
+      } else {
+        imgEl.src = "";
+        imgEl.classList.add("hidden");
+        phEl.classList.remove("hidden");
+        if (chooseLabel) chooseLabel.textContent = "Upload Photo";
+      }
+    }
+
+    function closeEditModal() {
+      const modal = document.getElementById("edit-modal");
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      activeBirdId = null;
+      pendingPhotoDataUrl = null;
+      pendingPhotoCleared = false;
+      deleteArmed = false;
+    }
+
+    async function saveEditModal() {
+      if (!activeBirdId) return;
+      const sourceId = activeBirdId;
+      const selectedTargetId = document.getElementById("modal-species-select").value || sourceId;
+      const urlVal = document.getElementById("modal-url-input").value.trim();
+      const noteVal = document.getElementById("modal-note-input").value.trim();
+
+      // Determine final photo for this record
+      let finalDataUrl = "";
+      let finalPhotoUrl = "";
+
+      if (pendingPhotoCleared) {
+        finalDataUrl = "";
+        finalPhotoUrl = "";
+      } else if (pendingPhotoDataUrl) {
+        finalDataUrl = pendingPhotoDataUrl;
+        finalPhotoUrl = "";
+      } else if (urlVal) {
+        finalPhotoUrl = urlVal;
+        finalDataUrl = "";
+      } else {
+        const existingSource = birdEntries[sourceId] || {};
+        finalDataUrl = existingSource.photoDataUrl || "";
+        finalPhotoUrl = existingSource.photoUrl || "";
+      }
+
+      // Case 1: User changed the Species dropdown to reassign to a different bird!
+      if (selectedTargetId !== sourceId) {
+        if (!birdEntries[selectedTargetId]) birdEntries[selectedTargetId] = {};
+
+        if (finalDataUrl) {
+          birdEntries[selectedTargetId].photoDataUrl = finalDataUrl;
+          birdEntries[selectedTargetId].photoUrl = "";
+          await idbPutPhoto(selectedTargetId, finalDataUrl);
+        } else if (finalPhotoUrl) {
+          birdEntries[selectedTargetId].photoUrl = finalPhotoUrl;
+          birdEntries[selectedTargetId].photoDataUrl = "";
+          await idbDeletePhoto(selectedTargetId);
         }
-    </script>
+
+        if (noteVal) {
+          birdEntries[selectedTargetId].note = birdEntries[selectedTargetId].note
+            ? `${birdEntries[selectedTargetId].note} | ${noteVal}`
+            : noteVal;
+        }
+        birdEntries[selectedTargetId].updatedAt = Date.now();
+
+        // Clear the old incorrect species entry
+        birdEntries[sourceId] = { photoDataUrl: "", photoUrl: "", note: "", updatedAt: Date.now() };
+        await idbDeletePhoto(sourceId);
+
+        persistLocalMetadata();
+        renderChecklist();
+        const targetBird = getAllSpecies().find((b) => b.id === selectedTargetId);
+        closeEditModal();
+        showToast(`Moved & saved to ${targetBird ? targetBird.common : selectedTargetId}!`);
+        return;
+      }
+
+      // Case 2: Standard save on the current species
+      if (!birdEntries[sourceId]) birdEntries[sourceId] = {};
+
+      if (pendingPhotoCleared) {
+        birdEntries[sourceId].photoDataUrl = "";
+        birdEntries[sourceId].photoUrl = "";
+        await idbDeletePhoto(sourceId);
+      } else if (pendingPhotoDataUrl) {
+        birdEntries[sourceId].photoDataUrl = pendingPhotoDataUrl;
+        birdEntries[sourceId].photoUrl = "";
+        await idbPutPhoto(sourceId, pendingPhotoDataUrl);
+      } else if (urlVal) {
+        birdEntries[sourceId].photoUrl = urlVal;
+        birdEntries[sourceId].photoDataUrl = "";
+        await idbDeletePhoto(sourceId);
+      }
+
+      birdEntries[sourceId].note = noteVal;
+      birdEntries[sourceId].updatedAt = Date.now();
+
+      persistLocalMetadata();
+      renderChecklist();
+      closeEditModal();
+      showToast("Field entry saved!");
+    }
+
+    async function handleDeletePhotoClick() {
+      if (!activeBirdId) return;
+      const btn = document.getElementById("btn-delete-photo");
+      if (!deleteArmed) {
+        deleteArmed = true;
+        btn.textContent = "Confirm Delete?";
+        btn.className = "px-2.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition shadow";
+        return;
+      }
+
+      const birdId = activeBirdId;
+      pendingPhotoDataUrl = null;
+      pendingPhotoCleared = true;
+      document.getElementById("modal-url-input").value = "";
+      document.getElementById("modal-note-input").value = "";
+      updateModalPreview("");
+
+      birdEntries[birdId] = { photoDataUrl: "", photoUrl: "", note: "", updatedAt: Date.now() };
+      await idbDeletePhoto(birdId);
+      persistLocalMetadata();
+      renderChecklist();
+      closeEditModal();
+      showToast("Entry deleted");
+    }
+
+    async function handleCardDeleteClick(birdId) {
+      if (armedCardDeleteId !== birdId) {
+        armedCardDeleteId = birdId;
+        renderChecklist();
+        clearTimeout(window.__cardDeleteTimer);
+        window.__cardDeleteTimer = setTimeout(() => {
+          if (armedCardDeleteId === birdId) {
+            armedCardDeleteId = null;
+            renderChecklist();
+          }
+        }, 3000);
+        return;
+      }
+
+      armedCardDeleteId = null;
+      birdEntries[birdId] = { photoDataUrl: "", photoUrl: "", note: "", updatedAt: Date.now() };
+      await idbDeletePhoto(birdId);
+      persistLocalMetadata();
+      renderChecklist();
+      showToast("Photo & note deleted");
+    }
+
+    // =========================================================================
+    // 6. EVENT WIRING & BOOTSTRAP
+    // =========================================================================
+    function bindEvents() {
+      // View tabs
+      document.querySelectorAll(".view-tab").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          currentView = btn.dataset.view;
+          document.querySelectorAll(".view-tab").forEach((b) => {
+            if (b.dataset.view === currentView) {
+              b.className = "view-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition bg-emerald-500 text-slate-950";
+            } else {
+              b.className = "view-tab px-3 py-1.5 rounded-lg text-xs font-semibold transition text-[#9cb3a7] hover:text-white";
+            }
+          });
+          renderChecklist();
+        });
+      });
+
+      // Search & group filter
+      document.getElementById("search-input").addEventListener("input", (e) => {
+        searchQuery = e.target.value;
+        renderChecklist();
+      });
+
+      document.getElementById("group-filter").addEventListener("change", (e) => {
+        currentGroup = e.target.value;
+        renderChecklist();
+      });
+
+      // Delegated card actions (Edit button, Delete button, Lightbox image)
+      document.getElementById("bird-grid").addEventListener("click", (e) => {
+        const editBtn = e.target.closest("[data-edit-id]");
+        if (editBtn) {
+          openEditModal(editBtn.dataset.editId);
+          return;
+        }
+        const delBtn = e.target.closest("[data-card-delete-id]");
+        if (delBtn) {
+          handleCardDeleteClick(delBtn.dataset.cardDeleteId);
+          return;
+        }
+        const lbImg = e.target.closest("[data-lightbox-id]");
+        if (lbImg) {
+          const id = lbImg.dataset.lightboxId;
+          const bird = getAllSpecies().find((b) => b.id === id);
+          const src = getBirdImageSrc(id);
+          if (bird && src) {
+            document.getElementById("lightbox-img").src = src;
+            document.getElementById("lightbox-title").textContent = `${bird.common} (${bird.sci})`;
+            document.getElementById("lightbox-caption").textContent = birdEntries[id]?.note || bird.group;
+            const lb = document.getElementById("lightbox-modal");
+            lb.classList.remove("hidden");
+            lb.classList.add("flex");
+          }
+        }
+      });
+
+      // Inline note auto-save on card
+      document.getElementById("bird-grid").addEventListener("input", (e) => {
+        const noteInput = e.target.closest("[data-inline-note-id]");
+        if (!noteInput) return;
+        const id = noteInput.dataset.inlineNoteId;
+        if (!birdEntries[id]) birdEntries[id] = {};
+        birdEntries[id].note = noteInput.value;
+        birdEntries[id].updatedAt = Date.now();
+        persistLocalMetadata();
+      });
+
+      // Edit modal controls
+      document.getElementById("btn-close-modal").addEventListener("click", closeEditModal);
+      document.getElementById("btn-cancel-modal").addEventListener("click", closeEditModal);
+      document.getElementById("btn-save-modal").addEventListener("click", saveEditModal);
+      document.getElementById("btn-delete-photo").addEventListener("click", handleDeletePhotoClick);
+
+      const triggerFilePicker = () => {
+        const input = document.getElementById("hidden-photo-input");
+        input.value = "";
+        input.click();
+      };
+      document.getElementById("btn-choose-file").addEventListener("click", triggerFilePicker);
+      document.getElementById("btn-modal-edit-photo").addEventListener("click", triggerFilePicker);
+
+      // Update header preview text when user switches the Species dropdown in modal
+      document.getElementById("modal-species-select").addEventListener("change", (e) => {
+        const chosen = getAllSpecies().find((b) => b.id === e.target.value);
+        if (chosen) {
+          document.getElementById("modal-bird-name").textContent = chosen.common;
+          document.getElementById("modal-bird-sci").textContent = `${chosen.sci} • ${chosen.group}`;
+        }
+      });
+
+      document.getElementById("hidden-photo-input").addEventListener("change", (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          pendingPhotoDataUrl = ev.target.result;
+          pendingPhotoCleared = false;
+          document.getElementById("modal-url-input").value = "";
+          updateModalPreview(pendingPhotoDataUrl);
+          document.getElementById("btn-delete-photo").classList.remove("hidden");
+        };
+        reader.onerror = () => showToast("Could not read selected image");
+        reader.readAsDataURL(file);
+      });
+
+      document.getElementById("modal-url-input").addEventListener("input", (e) => {
+        const val = e.target.value.trim();
+        if (val) {
+          pendingPhotoDataUrl = null;
+          pendingPhotoCleared = false;
+          updateModalPreview(val);
+          document.getElementById("btn-delete-photo").classList.remove("hidden");
+        }
+      });
+
+      // Lightbox close
+      document.getElementById("btn-close-lightbox").addEventListener("click", () => {
+        const lb = document.getElementById("lightbox-modal");
+        lb.classList.add("hidden");
+        lb.classList.remove("flex");
+      });
+      document.getElementById("lightbox-modal").addEventListener("click", (e) => {
+        if (e.target.id === "lightbox-modal") {
+          e.target.classList.add("hidden");
+          e.target.classList.remove("flex");
+        }
+      });
+
+      // Add Custom Species modal
+      document.getElementById("btn-add-species").addEventListener("click", () => {
+        const m = document.getElementById("add-species-modal");
+        m.classList.remove("hidden");
+        m.classList.add("flex");
+      });
+      const closeAddModal = () => {
+        const m = document.getElementById("add-species-modal");
+        m.classList.add("hidden");
+        m.classList.remove("flex");
+      };
+      document.getElementById("btn-close-add-modal").addEventListener("click", closeAddModal);
+      document.getElementById("btn-cancel-add-modal").addEventListener("click", closeAddModal);
+      document.getElementById("btn-confirm-add-species").addEventListener("click", () => {
+        const common = document.getElementById("new-bird-common").value.trim();
+        const sci = document.getElementById("new-bird-sci").value.trim() || "Species incerta";
+        const group = document.getElementById("new-bird-group").value.trim() || "Custom / Trip Additions";
+        if (!common) {
+          showToast("Enter a common name");
+          return;
+        }
+        const id = "custom-" + common.toLowerCase().replace(/[^a-z0-9]+/g, "-") + "-" + Date.now().toString(36);
+        customSpecies.push({ id, common, sci, group });
+        persistLocalMetadata();
+        populateGroupFilter();
+        renderChecklist();
+        document.getElementById("new-bird-common").value = "";
+        document.getElementById("new-bird-sci").value = "";
+        closeAddModal();
+        showToast(`Added ${common}`);
+      });
+
+      // Backup & Restore JSON
+      document.getElementById("btn-export-json").addEventListener("click", () => {
+        const payload = {
+          exportedAt: new Date().toISOString(),
+          customSpecies,
+          birdEntries
+        };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `wildlife-field-log-backup-${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast("Backup JSON downloaded");
+      });
+
+      document.getElementById("btn-import-json").addEventListener("click", () => {
+        const inp = document.getElementById("hidden-import-input");
+        inp.value = "";
+        inp.click();
+      });
+
+      document.getElementById("hidden-import-input").addEventListener("change", async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        try {
+          const text = await file.text();
+          const parsed = JSON.parse(text);
+          if (Array.isArray(parsed.customSpecies)) customSpecies = parsed.customSpecies;
+          if (parsed.birdEntries && typeof parsed.birdEntries === "object") {
+            birdEntries = parsed.birdEntries;
+            for (const id of Object.keys(birdEntries)) {
+              if (birdEntries[id]?.photoDataUrl) {
+                await idbPutPhoto(id, birdEntries[id].photoDataUrl);
+              }
+            }
+          }
+          persistLocalMetadata();
+          populateGroupFilter();
+          renderChecklist();
+          showToast("Backup restored successfully!");
+        } catch (err) {
+          showToast("Invalid backup JSON file");
+        }
+      });
+    }
+
+    async function bootstrapApp() {
+      await openPhotoDB();
+
+      try {
+        const savedMeta = JSON.parse(localStorage.getItem(LS_META_KEY) || "{}");
+        const savedCustom = JSON.parse(localStorage.getItem(LS_CUSTOM_KEY) || "[]");
+        if (Array.isArray(savedCustom)) customSpecies = savedCustom;
+        if (savedMeta && typeof savedMeta === "object") birdEntries = savedMeta;
+      } catch (_) {}
+
+      const idbPhotos = await idbGetAllPhotos();
+      Object.keys(idbPhotos).forEach((id) => {
+        if (!birdEntries[id]) birdEntries[id] = {};
+        birdEntries[id].photoDataUrl = idbPhotos[id];
+      });
+
+      populateGroupFilter();
+      bindEvents();
+      renderChecklist();
+    }
+
+    bootstrapApp();
+  </script>
 </body>
 </html>
