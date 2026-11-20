@@ -261,82 +261,75 @@
         <!-- Empty State -->
         <div id="empty-state" class="hidden flex-col items-center justify-center text-center py-16 px-4 bg-slate-900/50 border border-slate-800/80 rounded-2xl">
             <div class="w-14 h-14 rounded-2xl bg-slate-800/80 flex items-center justify-center text-slate-400 mb-4">
-                <svg class="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.75">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-            </div>
-            <h3 class="text-base font-semibold text-white mb-1">No matching species found</h3>
-            <p id="empty-state-desc" class="text-sm text-slate-400 max-w-md mb-4">Try adjusting your search query, taxonomic group filter, or switch view tabs.</p>
-            <button onclick="resetFilters()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-white border border-slate-700 transition">
-                Reset All Filters
-            </button>
-        </div>
-    </main>
-
-    <!-- Footer -->
-    <footer class="border-t border-slate-900 bg-slate-950 py-6 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-            <div>
-                Baseline Checklist: <span class="text-slate-400">Billy Frank Jr. Nisqually National Wildlife Refuge (USFWS Washington)</span> • Taxonomic Sequence: AOS
-            </div>
-            <div class="font-mono">
-                Built for GitHub Pages • Self-Contained Local-First Field App
-            </div>
-        </div>
-    </footer>
-
-    <!-- Hidden File Input for Direct Photo Upload -->
-    <input type="file" id="hidden-photo-input" accept="image/*" class="hidden" onchange="handleFileSelected(event)">
-
-    <!-- MODAL 1: Photo Attach / URL / Fullscreen Lightbox -->
-    <div id="photo-modal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-2xl w-full overflow-hidden shadow-2xl animate-fade-in">
-            <div class="flex items-center justify-between px-5 py-4 border-b border-slate-800">
-                <div>
-                    <h3 id="photo-modal-title" class="text-base font-bold text-white">Attach Bird Photograph</h3>
-                    <p id="photo-modal-subtitle" class="text-xs text-slate-400 italic">Scientific Name</p>
+    <!-- MODAL 1: Compact Photo Attach / Edit / Reassign Modal -->
+    <div id="photo-modal" class="hidden fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-lg w-full max-h-[86vh] flex flex-col overflow-hidden shadow-2xl animate-fade-in">
+            <!-- Sticky Compact Header -->
+            <div class="flex items-center justify-between px-4 py-3 border-b border-slate-800 shrink-0 bg-slate-900">
+                <div class="min-w-0 pr-2">
+                    <h3 id="photo-modal-title" class="text-sm sm:text-base font-bold text-white truncate">Attach Bird Photograph</h3>
+                    <p id="photo-modal-subtitle" class="text-[11px] text-slate-400 italic truncate">Scientific Name</p>
                 </div>
-                <button onclick="closePhotoModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition">
-                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <button onclick="closePhotoModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition shrink-0" title="Close">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
 
-            <div class="p-5 space-y-5">
-                <!-- Current Photo Preview (if present) -->
+            <!-- Scrollable Compact Body -->
+            <div class="p-4 space-y-3 overflow-y-auto flex-1">
+                <!-- Current Photo Preview (Compact max-height so modal never overflows) -->
                 <div id="photo-modal-preview-wrap" class="hidden">
-                    <div class="relative rounded-xl overflow-hidden bg-slate-950 border border-slate-800 aspect-[3/2] flex items-center justify-center">
+                    <div class="relative rounded-xl overflow-hidden bg-slate-950 border border-slate-800 h-36 sm:h-40 flex items-center justify-center">
                         <img id="photo-modal-preview-img" src="" alt="Preview" class="w-full h-full object-contain">
                     </div>
                 </div>
 
-                <!-- Option A: Upload Local High-Res Photo -->
-                <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 hover:border-forest-500/60 transition">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <div>
-                            <div class="text-sm font-semibold text-white">Upload Local Photo File</div>
-                            <p class="text-xs text-slate-400 mt-0.5">Stored directly in your browser's IndexedDB (supports full-res JPEGs/PNGs).</p>
-                        </div>
-                        <button onclick="triggerLocalFileUpload()" class="px-4 py-2.5 rounded-xl bg-forest-600 hover:bg-forest-500 text-white text-xs font-semibold transition shrink-0 shadow">
-                            Choose Image File
+                <!-- Reassign / Move Photo to Another Species (Visible when a photo exists) -->
+                <div id="reassign-species-wrap" class="hidden p-3 rounded-xl bg-amber-950/20 border border-amber-500/30">
+                    <label for="reassign-species-select" class="block text-[11px] font-mono uppercase tracking-wider text-amber-300 mb-1.5">
+                        Wrong Bird? Move Photo & Note To:
+                    </label>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <select 
+                            id="reassign-species-select" 
+                            class="flex-1 px-2.5 py-1.5 bg-slate-950 border border-slate-700 focus:border-amber-400 rounded-lg text-xs text-white outline-none"
+                        >
+                            <!-- Populated dynamically with grouped species -->
+                        </select>
+                        <button 
+                            type="button"
+                            onclick="reassignPhotoToSpecies()" 
+                            class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-semibold transition shrink-0 shadow-sm"
+                        >
+                            Move Species
                         </button>
                     </div>
                 </div>
 
-                <!-- Option B: External Image URL (Pixieset, GitHub Raw, Flickr, etc.) -->
-                <div class="p-4 rounded-xl bg-slate-950 border border-slate-800">
-                    <label class="block text-sm font-semibold text-white mb-1">Or Link External Photo URL</label>
-                    <p class="text-xs text-slate-400 mb-3">Paste a direct image link (e.g., from your Pixieset gallery or GitHub repo assets) so it loads anywhere across devices.</p>
-                    <div class="flex flex-col sm:flex-row gap-2">
+                <!-- Option A: Upload Local High-Res Photo -->
+                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 hover:border-forest-500/60 transition flex items-center justify-between gap-3">
+                    <div class="min-w-0">
+                        <div class="text-xs sm:text-sm font-semibold text-white">Upload Local Photo</div>
+                        <p class="text-[11px] text-slate-400 truncate">Stored locally in IndexedDB</p>
+                    </div>
+                    <button onclick="triggerLocalFileUpload()" class="px-3.5 py-2 rounded-lg bg-forest-600 hover:bg-forest-500 text-white text-xs font-semibold transition shrink-0 shadow">
+                        Choose File
+                    </button>
+                </div>
+
+                <!-- Option B: External Image URL -->
+                <div class="p-3 rounded-xl bg-slate-950 border border-slate-800">
+                    <label class="block text-xs font-semibold text-white mb-1">Or Link External Photo URL</label>
+                    <div class="flex gap-2">
                         <input 
                             type="url" 
                             id="photo-url-input" 
-                            placeholder="https://images.pixieset.com/... or ./photos/wood-duck.jpg" 
-                            class="flex-1 px-3 py-2 bg-slate-900 border border-slate-700 focus:border-forest-500 rounded-xl text-xs text-white placeholder-slate-500 outline-none"
+                            placeholder="https://images.pixieset.com/... or ./photos/bird.jpg" 
+                            class="flex-1 min-w-0 px-2.5 py-1.5 bg-slate-900 border border-slate-700 focus:border-forest-500 rounded-lg text-xs text-white placeholder-slate-500 outline-none"
                         >
-                        <button onclick="savePhotoUrl()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white text-xs font-medium transition shrink-0">
+                        <button onclick="savePhotoUrl()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-600 text-white text-xs font-medium transition shrink-0">
                             Save URL
                         </button>
                     </div>
@@ -344,23 +337,30 @@
 
                 <!-- Quick Note Edit inside Modal -->
                 <div>
-                    <label class="block text-xs font-mono uppercase tracking-wider text-slate-400 mb-1.5">Date Taken & Location Note</label>
+                    <label class="block text-[11px] font-mono uppercase tracking-wider text-slate-400 mb-1">Date Taken & Location Note</label>
                     <input 
                         type="text" 
                         id="photo-modal-note" 
-                        placeholder="e.g., 2026-10-12 • Nisqually Twin Barns Boardwalk (Sony a1 + 200-600mm)" 
-                        class="w-full px-3.5 py-2.5 bg-slate-950 border border-slate-800 focus:border-forest-500 rounded-xl text-xs sm:text-sm text-white placeholder-slate-500 outline-none"
+                        placeholder="e.g., 2026-10-12 • Nisqually Twin Barns Boardwalk" 
+                        class="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-forest-500 rounded-lg text-xs text-white placeholder-slate-500 outline-none"
                     >
                 </div>
             </div>
 
-            <div class="px-5 py-3.5 bg-slate-950 border-t border-slate-800 flex items-center justify-between gap-3">
-                <button id="remove-photo-btn" onclick="removeCurrentPhoto()" class="hidden px-3 py-2 rounded-lg text-xs font-medium text-rose-400 hover:bg-rose-950/50 border border-rose-900/50 transition">
-                    Remove Photo
+            <!-- Sticky Action Footer: Always visible & easy to tap -->
+            <div class="px-4 py-3 bg-slate-950 border-t border-slate-800 flex items-center justify-between gap-2 shrink-0">
+                <button id="remove-photo-btn" onclick="removeCurrentPhoto()" class="hidden inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-rose-300 bg-rose-950/60 hover:bg-rose-900/80 border border-rose-800/70 transition">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                    Delete Photo
                 </button>
                 <div class="flex items-center gap-2 ml-auto">
-                    <button onclick="saveModalNoteAndClose()" class="px-4 py-2 rounded-xl bg-forest-600 hover:bg-forest-500 text-white text-xs font-semibold transition">
-                        Done
+                    <button onclick="closePhotoModal()" class="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium transition">
+                        Cancel
+                    </button>
+                    <button onclick="saveModalNoteAndClose()" class="px-4 py-2 rounded-lg bg-forest-600 hover:bg-forest-500 text-white text-xs font-semibold transition shadow">
+                        Save & Done
                     </button>
                 </div>
             </div>
@@ -908,12 +908,12 @@
                         class="w-full h-full object-cover cursor-zoom-in transition-transform duration-500 group-hover:scale-[1.03]"
                     >
                     <!-- Quick Hover Overlay Controls -->
-                    <div class="absolute inset-x-0 bottom-0 p-2.5 bg-gradient-to-t from-black/85 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-between">
+                    <div class="absolute inset-x-0 bottom-0 p-2.5 bg-gradient-to-t from-black/85 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-between gap-1.5">
                         <button onclick="openLightbox('${bird.id}')" class="px-2.5 py-1 rounded-lg bg-slate-900/90 hover:bg-slate-800 text-white text-[11px] font-medium border border-slate-700 transition">
                             Full View
                         </button>
                         <button onclick="openPhotoModal('${bird.id}')" class="px-2.5 py-1 rounded-lg bg-forest-600/95 hover:bg-forest-500 text-white text-[11px] font-medium transition">
-                            Replace Photo
+                            Edit / Move / Delete
                         </button>
                     </div>
                   `
@@ -1058,31 +1058,60 @@
         }
 
         // Photo Modal Operations
+        function populateReassignDropdown(excludeBirdId) {
+            const select = document.getElementById('reassign-species-select');
+            select.innerHTML = '<option value="">-- Select target species --</option>';
+
+            const families = [...new Set(allSpecies.map(b => b.family))];
+            families.forEach(fam => {
+                const groupBirds = allSpecies.filter(b => b.family === fam && b.id !== excludeBirdId);
+                if (groupBirds.length === 0) return;
+
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = fam;
+                groupBirds.forEach(b => {
+                    const opt = document.createElement('option');
+                    opt.value = b.id;
+                    const alreadyHas = hasPhoto(b.id) ? ' (has photo)' : '';
+                    opt.textContent = `${b.common}${alreadyHas}`;
+                    optgroup.appendChild(opt);
+                });
+                select.appendChild(optgroup);
+            });
+        }
+
+        function updatePhotoModalMediaState(birdId) {
+            const photoSrc = getPhotoSrc(birdId);
+            const previewWrap = document.getElementById('photo-modal-preview-wrap');
+            const previewImg = document.getElementById('photo-modal-preview-img');
+            const removeBtn = document.getElementById('remove-photo-btn');
+            const reassignWrap = document.getElementById('reassign-species-wrap');
+
+            if (photoSrc) {
+                previewImg.src = photoSrc;
+                previewWrap.classList.remove('hidden');
+                removeBtn.classList.remove('hidden');
+                reassignWrap.classList.remove('hidden');
+                populateReassignDropdown(birdId);
+            } else {
+                previewImg.src = '';
+                previewWrap.classList.add('hidden');
+                removeBtn.classList.add('hidden');
+                reassignWrap.classList.add('hidden');
+            }
+        }
+
         function openPhotoModal(birdId) {
             activeModalBirdId = birdId;
             const bird = allSpecies.find(b => b.id === birdId);
             const rec = recordsMap[birdId] || {};
-            const photoSrc = getPhotoSrc(birdId);
 
             document.getElementById('photo-modal-title').textContent = bird.common;
             document.getElementById('photo-modal-subtitle').textContent = `${bird.scientific} • ${bird.family}`;
             document.getElementById('photo-modal-note').value = rec.note || '';
             document.getElementById('photo-url-input').value = rec.photoUrl || '';
 
-            const previewWrap = document.getElementById('photo-modal-preview-wrap');
-            const previewImg = document.getElementById('photo-modal-preview-img');
-            const removeBtn = document.getElementById('remove-photo-btn');
-
-            if (photoSrc) {
-                previewImg.src = photoSrc;
-                previewWrap.classList.remove('hidden');
-                removeBtn.classList.remove('hidden');
-            } else {
-                previewImg.src = '';
-                previewWrap.classList.add('hidden');
-                removeBtn.classList.add('hidden');
-            }
-
+            updatePhotoModalMediaState(birdId);
             document.getElementById('photo-modal').classList.remove('hidden');
         }
 
@@ -1122,9 +1151,7 @@
                 await dbPut(STORE_RECORDS, updated);
 
                 document.getElementById('photo-modal-note').value = finalNote;
-                document.getElementById('photo-modal-preview-img').src = dataUrl;
-                document.getElementById('photo-modal-preview-wrap').classList.remove('hidden');
-                document.getElementById('remove-photo-btn').classList.remove('hidden');
+                updatePhotoModalMediaState(activeModalBirdId);
 
                 renderApp();
                 showToast('Photo stored in local archive');
@@ -1159,9 +1186,7 @@
             await dbPut(STORE_RECORDS, updated);
 
             document.getElementById('photo-modal-note').value = finalNote;
-            document.getElementById('photo-modal-preview-img').src = urlVal;
-            document.getElementById('photo-modal-preview-wrap').classList.remove('hidden');
-            document.getElementById('remove-photo-btn').classList.remove('hidden');
+            updatePhotoModalMediaState(activeModalBirdId);
 
             renderApp();
             showToast('External photo URL linked');
@@ -1181,12 +1206,60 @@
             recordsMap[activeModalBirdId] = updated;
             await dbPut(STORE_RECORDS, updated);
 
-            document.getElementById('photo-modal-preview-wrap').classList.add('hidden');
-            document.getElementById('remove-photo-btn').classList.add('hidden');
             document.getElementById('photo-url-input').value = '';
+            updatePhotoModalMediaState(activeModalBirdId);
 
             renderApp();
-            showToast('Photo removed from species');
+            showToast('Photo deleted — bird returned to Needed list');
+        }
+
+        async function reassignPhotoToSpecies() {
+            if (!activeModalBirdId) return;
+            const targetId = document.getElementById('reassign-species-select').value;
+            if (!targetId) {
+                showToast('Select a target bird species first', true);
+                return;
+            }
+
+            const sourceRec = recordsMap[activeModalBirdId];
+            if (!sourceRec || (!sourceRec.photoDataUrl && !sourceRec.photoUrl)) {
+                showToast('No photo to move', true);
+                return;
+            }
+
+            const targetBird = allSpecies.find(b => b.id === targetId);
+            const targetExisting = recordsMap[targetId] || { id: targetId };
+            const currentModalNote = document.getElementById('photo-modal-note').value.trim();
+
+            // Move photo and carry over the note if the target species doesn't already have a custom note
+            const updatedTarget = {
+                ...targetExisting,
+                id: targetId,
+                photoDataUrl: sourceRec.photoDataUrl || '',
+                photoUrl: sourceRec.photoUrl || '',
+                note: targetExisting.note ? targetExisting.note : currentModalNote,
+                updatedAt: new Date().toISOString()
+            };
+
+            // Clear photo from the old (incorrect) species
+            const clearedSource = {
+                ...sourceRec,
+                photoDataUrl: '',
+                photoUrl: '',
+                updatedAt: new Date().toISOString()
+            };
+
+            recordsMap[targetId] = updatedTarget;
+            recordsMap[activeModalBirdId] = clearedSource;
+
+            await Promise.all([
+                dbPut(STORE_RECORDS, updatedTarget),
+                dbPut(STORE_RECORDS, clearedSource)
+            ]);
+
+            renderApp();
+            closePhotoModal();
+            showToast(`Moved photo to ${targetBird ? targetBird.common : 'new species'}`);
         }
 
         async function saveModalNoteAndClose() {
